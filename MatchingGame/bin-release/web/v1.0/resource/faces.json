@@ -1,0 +1,11 @@
+{"file":"faces.png","frames":{
+"cardbg":{"x":907,"y":1,"w":150,"h":200,"offX":0,"offY":0,"sourceW":150,"sourceH":200},
+"f1":{"x":1059,"y":1,"w":148,"h":143,"offX":0,"offY":4,"sourceW":150,"sourceH":150},
+"f2":{"x":1624,"y":1,"w":120,"h":150,"offX":15,"offY":0,"sourceW":150,"sourceH":150},
+"f3":{"x":1488,"y":1,"w":134,"h":138,"offX":7,"offY":8,"sourceW":150,"sourceH":150},
+"f4":{"x":1352,"y":1,"w":134,"h":146,"offX":8,"offY":2,"sourceW":150,"sourceH":150},
+"f5":{"x":1746,"y":1,"w":122,"h":145,"offX":13,"offY":2,"sourceW":150,"sourceH":150},
+"f6":{"x":1209,"y":1,"w":141,"h":146,"offX":5,"offY":3,"sourceW":150,"sourceH":150},
+"f7":{"x":1870,"y":1,"w":141,"h":101,"offX":4,"offY":24,"sourceW":150,"sourceH":150},
+"f8":{"x":1870,"y":104,"w":96,"h":142,"offX":27,"offY":4,"sourceW":150,"sourceH":150},
+"beijing":{"x":1,"y":1,"w":904,"h":901,"offX":0,"offY":0,"sourceW":904,"sourceH":901}}}
