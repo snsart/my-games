@@ -9,7 +9,6 @@ class ButtonUI extends egret.Sprite{
 	public set label(label:string){
 		this._label=label;
 		this._labelTxt.text =label;
-		this.create();
 	}
 
 	private create():void{

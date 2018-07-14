@@ -52,7 +52,9 @@ class Main extends egret.DisplayObjectContainer {
      * Create a game scene
      */
     private createGameScene() {
-        
+        let startPanel:StartPanelUI=new StartPanelUI(this.stage.stageWidth,this.stage.stageHeight);
+        console.log()
+        this.stage.addChild(startPanel);
     }
 
 }
