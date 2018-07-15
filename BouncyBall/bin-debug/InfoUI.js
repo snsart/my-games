@@ -8,15 +8,15 @@ var __extends = this && this.__extends || function __extends(t, e) {
 for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
 r.prototype = e.prototype, t.prototype = new r();
 };
-var ScoreUI = (function (_super) {
-    __extends(ScoreUI, _super);
-    function ScoreUI() {
+var InfoUI = (function (_super) {
+    __extends(InfoUI, _super);
+    function InfoUI() {
         var _this = _super.call(this) || this;
         _this._score = 0;
         _this.create();
         return _this;
     }
-    Object.defineProperty(ScoreUI.prototype, "score", {
+    Object.defineProperty(InfoUI.prototype, "score", {
         get: function () {
             return this._score;
         },
@@ -27,20 +27,27 @@ var ScoreUI = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    ScoreUI.prototype.create = function () {
-        var label = new egret.TextField();
-        label.textColor = 0xffff00;
-        label.text = "score:";
-        label.width = 100;
-        label.height = 30;
-        this.addChild(label);
+    Object.defineProperty(InfoUI.prototype, "label", {
+        set: function (_label) {
+            this._label.text = _label;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    InfoUI.prototype.create = function () {
+        this._label = new egret.TextField();
+        this._label.textColor = 0xffff00;
+        this._label.text = "score:";
+        this._label.width = 100;
+        this._label.height = 30;
+        this.addChild(this._label);
         this._inputTxt = new egret.TextField();
         this._inputTxt.textColor = 0xffff00;
         this._inputTxt.x = 110;
         this._inputTxt.text = String(this._score);
         this.addChild(this._inputTxt);
     };
-    return ScoreUI;
+    return InfoUI;
 }(egret.Sprite));
-__reflect(ScoreUI.prototype, "ScoreUI");
-//# sourceMappingURL=ScoreUI.js.map
+__reflect(InfoUI.prototype, "InfoUI");
+//# sourceMappingURL=InfoUI.js.map
