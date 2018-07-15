@@ -3,6 +3,8 @@ class Main extends egret.DisplayObjectContainer {
 
     private _world:p2.World;
     private _ballBody:p2.Body;
+    private _ball:Ball;
+    private _bat:Bat;
 
     public constructor() {
         super();
@@ -63,11 +65,27 @@ class Main extends egret.DisplayObjectContainer {
         this.addBackground();
         this.initInfoPanel();
         this.addBoundary();
-        let bat:Bat=new Bat(this.stage);
-        bat.y=this.stage.stageHeight-90;
-        bat.x=10;
-        this.stage.addChild(bat);
-        this.addBall();
+
+        this._bat=new Bat(this.stage);
+        this.stage.addChild(this._bat);
+
+        this._ball=new Ball();
+        this.stage.addChild(this._ball);
+        egret.startTick(this.moveBall,this);
+        let that=this;
+        this._world.on("beginContact",(e)=>{
+             if((e.bodyA==this._ball.ballBody&&e.bodyB==this._bat.body)||(e.bodyB==this._ball.ballBody&&e.bodyA==this._bat.body)){
+                 console.log(this._bat.force);
+                this._ball.ballBody.applyImpulse(this._bat.force,[0,0]);
+             }
+        })
+        
+    }
+
+    private moveBall(timeStamp:number):boolean{
+        this._world.step(1/60,0.1,10);
+        this._ball.render();
+        return false;
     }
 
     private addBackground(){
@@ -94,10 +112,10 @@ class Main extends egret.DisplayObjectContainer {
     }
 
     private addBoundary(){
-        this.addStaticPanel(this.stage.stageWidth-10,50,Math.PI,1,this.stage.stageWidth-20);//top
-        this.addStaticPanel(this.stage.stageWidth-10,this.stage.stageHeight-10,270*Math.PI/180,2,this.stage.stageHeight-60);//right
-        this.addStaticPanel(10,this.stage.stageHeight-10,0,3,this.stage.stageWidth-20);//buttom
-        this.addStaticPanel(10,50,Math.PI/2,4,this.stage.stageHeight-60);//left
+        this.addStaticPanel(10,50,0,1,this.stage.stageWidth-20);//top
+         this.addStaticPanel(this.stage.stageWidth-10,50,Math.PI/2,3,this.stage.stageHeight-60);//buttom
+        this.addStaticPanel(this.stage.stageWidth-10,this.stage.stageHeight-10,Math.PI,3,this.stage.stageWidth-20);//buttom
+        this.addStaticPanel(10,this.stage.stageHeight-10,270*Math.PI/180,4,this.stage.stageHeight-60);//left
     }
 
     private addStaticPanel(x:number,y:number,angle:number,id:number,width:number){
@@ -125,10 +143,6 @@ class Main extends egret.DisplayObjectContainer {
         this.addChild(planeMc);
     }
 
-    private addBall(){
-
-    }
-
-
+    
 
 }

@@ -114,13 +114,27 @@ var Main = (function (_super) {
         this.initMainScene();
     };
     Main.prototype.initMainScene = function () {
+        var _this = this;
         this.addBackground();
         this.initInfoPanel();
         this.addBoundary();
-        var bat = new Bat(this.stage);
-        bat.y = this.stage.stageHeight - 90;
-        bat.x = 10;
-        this.stage.addChild(bat);
+        this._bat = new Bat(this.stage);
+        this.stage.addChild(this._bat);
+        this._ball = new Ball();
+        this.stage.addChild(this._ball);
+        egret.startTick(this.moveBall, this);
+        var that = this;
+        this._world.on("beginContact", function (e) {
+            if ((e.bodyA == _this._ball.ballBody && e.bodyB == _this._bat.body) || (e.bodyB == _this._ball.ballBody && e.bodyA == _this._bat.body)) {
+                console.log(_this._bat.force);
+                _this._ball.ballBody.applyImpulse(_this._bat.force, [0, 0]);
+            }
+        });
+    };
+    Main.prototype.moveBall = function (timeStamp) {
+        this._world.step(1 / 60, 0.1, 10);
+        this._ball.render();
+        return false;
     };
     Main.prototype.addBackground = function () {
         var backGround = new egret.Sprite;
@@ -144,10 +158,10 @@ var Main = (function (_super) {
         this.stage.addChild(time);
     };
     Main.prototype.addBoundary = function () {
-        this.addStaticPanel(this.stage.stageWidth - 10, 50, Math.PI, 1, this.stage.stageWidth - 20); //top
-        this.addStaticPanel(this.stage.stageWidth - 10, this.stage.stageHeight - 10, 270 * Math.PI / 180, 2, this.stage.stageHeight - 60); //right
-        this.addStaticPanel(10, this.stage.stageHeight - 10, 0, 3, this.stage.stageWidth - 20); //buttom
-        this.addStaticPanel(10, 50, Math.PI / 2, 4, this.stage.stageHeight - 60); //left
+        this.addStaticPanel(10, 50, 0, 1, this.stage.stageWidth - 20); //top
+        this.addStaticPanel(this.stage.stageWidth - 10, 50, Math.PI / 2, 3, this.stage.stageHeight - 60); //buttom
+        this.addStaticPanel(this.stage.stageWidth - 10, this.stage.stageHeight - 10, Math.PI, 3, this.stage.stageWidth - 20); //buttom
+        this.addStaticPanel(10, this.stage.stageHeight - 10, 270 * Math.PI / 180, 4, this.stage.stageHeight - 60); //left
     };
     Main.prototype.addStaticPanel = function (x, y, angle, id, width) {
         var planeBody = new p2.Body({

@@ -16,13 +16,29 @@ var Bat = (function (_super) {
         _this._world = World.getInstance();
         _this._stage = stage;
         _this._bat = new egret.Sprite();
+        _this._force = [0, -400];
+        _this._lastPosition = 0;
         _this.createBat();
         _this.addEvent();
         return _this;
     }
+    Object.defineProperty(Bat.prototype, "force", {
+        get: function () {
+            return this._force;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Bat.prototype, "body", {
+        get: function () {
+            return this._batBody;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Bat.prototype.createBat = function () {
         this._batBody = new p2.Body({
-            position: [this._stage.stageWidth / 2, 40]
+            position: [this._stage.stageWidth / 2, this._stage.stageHeight - 50]
         });
         var batShape = new p2.Box({
             width: this._batWidth,
@@ -46,12 +62,14 @@ var Bat = (function (_super) {
         var _this = this;
         this._bat.touchEnabled = true;
         this._bat.addEventListener(egret.TouchEvent.TOUCH_BEGIN, function (e) {
+            _this._lastPosition = 0;
             _this._isTouch = true;
         }, this);
         this._stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, function (e) {
             if (_this._isTouch) {
-                var baX = _this._batBody.position[0];
-                _this._batBody.position[0] = Math.max(_this._batWidth / 2, Math.min(e.stageX, _this._stage.stageWidth - 20 - _this._batWidth / 2));
+                _this._batBody.position[0] = Math.max(_this._batWidth / 2 + 10, Math.min(e.stageX, _this._stage.stageWidth - 10 - _this._batWidth / 2));
+                _this.force[0] = (_this._lastPosition == 0 ? 0 : _this._batBody.position[0] - _this._lastPosition) * 200;
+                _this._lastPosition = _this._batBody.position[0];
                 _this.render(_this._batBody);
             }
         }, this);

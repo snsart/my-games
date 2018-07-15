@@ -10,6 +10,7 @@
 		"libs/modules/promise/promise.js"
 	],
 	"game": [
+		"bin-debug/Ball.js",
 		"bin-debug/Bat.js",
 		"bin-debug/ButtonUI.js",
 		"bin-debug/InfoUI.js",
