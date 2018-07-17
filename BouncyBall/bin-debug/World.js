@@ -6,7 +6,8 @@ var World = (function () {
     }
     World.getInstance = function () {
         if (!World._instance) {
-            World._instance = new p2.World({ gravity: [0, 9.8] });
+            World._instance = new p2.World({ gravity: [0, 10.8] });
+            World._instance.defaultContactMaterial.restitution = 1;
         }
         return World._instance;
     };

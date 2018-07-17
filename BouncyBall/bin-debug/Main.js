@@ -118,6 +118,7 @@ var Main = (function (_super) {
         this.addBackground();
         this.initInfoPanel();
         this.addBoundary();
+        this.addBricks();
         this._bat = new Bat(this.stage);
         this.stage.addChild(this._bat);
         this._ball = new Ball();
@@ -128,6 +129,12 @@ var Main = (function (_super) {
             if ((e.bodyA == _this._ball.ballBody && e.bodyB == _this._bat.body) || (e.bodyB == _this._ball.ballBody && e.bodyA == _this._bat.body)) {
                 console.log(_this._bat.force);
                 _this._ball.ballBody.applyImpulse(_this._bat.force, [0, 0]);
+            }
+            if (e.bodyA.displays && e.bodyA.displays[0] instanceof Brick) {
+                e.bodyA.displays[0].destroy();
+            }
+            else if (e.bodyB.displays && e.bodyB.displays[0] instanceof Brick) {
+                e.bodyB.displays[0].destroy();
             }
         });
     };
@@ -181,6 +188,17 @@ var Main = (function (_super) {
         planeMc.graphics.endFill();
         planeMc.rotation = planeBody.angle * 180 / Math.PI;
         this.addChild(planeMc);
+    };
+    Main.prototype.addBricks = function () {
+        for (var i = 0; i <= 8; i++) {
+            for (var j = 0; j <= 5; j++) {
+                var brick = new Brick();
+                brick.brickBody.position[0] = 80 + i * 60;
+                brick.brickBody.position[1] = 200 + j * 40;
+                brick.render();
+                this.addChild(brick);
+            }
+        }
     };
     return Main;
 }(egret.DisplayObjectContainer));

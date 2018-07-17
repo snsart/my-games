@@ -12,6 +12,7 @@
 	"game": [
 		"bin-debug/Ball.js",
 		"bin-debug/Bat.js",
+		"bin-debug/Brick.js",
 		"bin-debug/ButtonUI.js",
 		"bin-debug/InfoUI.js",
 		"bin-debug/LoadingUI.js",

@@ -20,7 +20,7 @@ class Ball extends egret.Sprite{
 	private addBall(){
 		this._ballBody=new p2.Body({
             mass:1,
-			position:[200,300]
+			position:[200,400]
         });
         let ballShape:p2.Circle=new p2.Circle({
             radius:15

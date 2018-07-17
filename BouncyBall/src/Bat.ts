@@ -13,7 +13,7 @@ class Bat extends egret.Sprite{
 		this._world=World.getInstance();
 		this._stage=stage;
 		this._bat=new egret.Sprite();
-		this._force=[0,-400];
+		this._force=[0,-300];
 		this._lastPosition=0;
 		this.createBat();
 		this.addEvent();

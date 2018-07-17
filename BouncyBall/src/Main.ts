@@ -65,12 +65,14 @@ class Main extends egret.DisplayObjectContainer {
         this.addBackground();
         this.initInfoPanel();
         this.addBoundary();
+        this.addBricks();
 
         this._bat=new Bat(this.stage);
         this.stage.addChild(this._bat);
 
         this._ball=new Ball();
         this.stage.addChild(this._ball);
+
         egret.startTick(this.moveBall,this);
         let that=this;
         this._world.on("beginContact",(e)=>{
@@ -78,6 +80,13 @@ class Main extends egret.DisplayObjectContainer {
                  console.log(this._bat.force);
                 this._ball.ballBody.applyImpulse(this._bat.force,[0,0]);
              }
+           
+             if(e.bodyA.displays&&e.bodyA.displays[0] instanceof Brick){
+                 (e.bodyA.displays[0] as Brick).destroy();
+             }else if(e.bodyB.displays&&e.bodyB.displays[0] instanceof Brick){
+                 (e.bodyB.displays[0] as Brick).destroy();
+             }
+
         })
         
     }
@@ -141,6 +150,18 @@ class Main extends egret.DisplayObjectContainer {
         planeMc.graphics.endFill();
         planeMc.rotation=planeBody.angle*180/Math.PI;
         this.addChild(planeMc);
+    }
+
+    private addBricks(){
+        for(let i=0;i<=8;i++){
+            for(let j=0;j<=5;j++){
+                let brick:Brick=new Brick();
+                brick.brickBody.position[0]=80+i*60;
+                brick.brickBody.position[1]=200+j*40;
+                brick.render();
+                this.addChild(brick);
+            }
+        }
     }
 
     

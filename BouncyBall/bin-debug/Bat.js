@@ -16,7 +16,7 @@ var Bat = (function (_super) {
         _this._world = World.getInstance();
         _this._stage = stage;
         _this._bat = new egret.Sprite();
-        _this._force = [0, -400];
+        _this._force = [0, -300];
         _this._lastPosition = 0;
         _this.createBat();
         _this.addEvent();
@@ -68,7 +68,7 @@ var Bat = (function (_super) {
         this._stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, function (e) {
             if (_this._isTouch) {
                 _this._batBody.position[0] = Math.max(_this._batWidth / 2 + 10, Math.min(e.stageX, _this._stage.stageWidth - 10 - _this._batWidth / 2));
-                _this.force[0] = (_this._lastPosition == 0 ? 0 : _this._batBody.position[0] - _this._lastPosition) * 200;
+                _this.force[0] = (_this._lastPosition == 0 ? 0 : _this._batBody.position[0] - _this._lastPosition) * 100;
                 _this._lastPosition = _this._batBody.position[0];
                 _this.render(_this._batBody);
             }
