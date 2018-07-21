@@ -76,17 +76,25 @@ class Main extends egret.DisplayObjectContainer {
         egret.startTick(this.moveBall,this);
         let that=this;
         this._world.on("beginContact",(e)=>{
-             if((e.bodyA==this._ball.ballBody&&e.bodyB==this._bat.body)||(e.bodyB==this._ball.ballBody&&e.bodyA==this._bat.body)){
-                 console.log(this._bat.force);
-                this._ball.ballBody.applyImpulse(this._bat.force,[0,0]);
-             }
-           
              if(e.bodyA.displays&&e.bodyA.displays[0] instanceof Brick){
                  (e.bodyA.displays[0] as Brick).destroy();
              }else if(e.bodyB.displays&&e.bodyB.displays[0] instanceof Brick){
                  (e.bodyB.displays[0] as Brick).destroy();
              }
 
+        })
+
+        this._world.on("preSolve",(e)=>{
+            for(let i=0;i<e.contactEquations.length;i++){
+                var eq=e.contactEquations[i];
+                if((eq.bodyA==this._ball.ballBody&&eq.bodyB==this._bat.body)||(eq.bodyB==this._ball.ballBody&&eq.bodyA==this._bat.body)){
+                    //如何碰到bat的顶端，则进行反弹
+                    var y=eq.normalA[1];
+                    if(y!=0){
+                        this._ball.ballBody.applyImpulse(this._bat.force,[0,0]);
+                    }
+                }
+            }
         })
         
     }

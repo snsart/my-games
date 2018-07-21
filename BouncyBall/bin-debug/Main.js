@@ -126,15 +126,23 @@ var Main = (function (_super) {
         egret.startTick(this.moveBall, this);
         var that = this;
         this._world.on("beginContact", function (e) {
-            if ((e.bodyA == _this._ball.ballBody && e.bodyB == _this._bat.body) || (e.bodyB == _this._ball.ballBody && e.bodyA == _this._bat.body)) {
-                console.log(_this._bat.force);
-                _this._ball.ballBody.applyImpulse(_this._bat.force, [0, 0]);
-            }
             if (e.bodyA.displays && e.bodyA.displays[0] instanceof Brick) {
                 e.bodyA.displays[0].destroy();
             }
             else if (e.bodyB.displays && e.bodyB.displays[0] instanceof Brick) {
                 e.bodyB.displays[0].destroy();
+            }
+        });
+        this._world.on("preSolve", function (e) {
+            console.log(e);
+            for (var i = 0; i < e.contactEquations.length; i++) {
+                var eq = e.contactEquations[i];
+                if ((eq.bodyA == _this._ball.ballBody && eq.bodyB == _this._bat.body) || (eq.bodyB == _this._ball.ballBody && eq.bodyA == _this._bat.body)) {
+                    var y = eq.normalA[1];
+                    if (y != 0) {
+                        _this._ball.ballBody.applyImpulse(_this._bat.force, [0, 0]);
+                    }
+                }
             }
         });
     };
