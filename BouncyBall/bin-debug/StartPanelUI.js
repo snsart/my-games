@@ -12,14 +12,20 @@ var StartPanelUI = (function (_super) {
     __extends(StartPanelUI, _super);
     function StartPanelUI(width, height) {
         var _this = _super.call(this) || this;
-        console.log(width, height);
-        _this._width = width;
-        _this._height = height;
-        _this.drawBack();
-        _this.addTitle();
-        _this.addButton();
+        _this.width = width;
+        _this.height = height;
         return _this;
     }
+    StartPanelUI.prototype.createChildren = function () {
+        _super.prototype.createChildren.call(this);
+        this.drawBack();
+        this.addTitle();
+        this._startBtn = new eui.Button();
+        this._startBtn.label = "start";
+        this._startBtn.horizontalCenter = 0;
+        this._startBtn.verticalCenter = 0;
+        this.addChild(this._startBtn);
+    };
     Object.defineProperty(StartPanelUI.prototype, "startBtn", {
         get: function () {
             return this._startBtn;
@@ -28,27 +34,22 @@ var StartPanelUI = (function (_super) {
         configurable: true
     });
     StartPanelUI.prototype.drawBack = function () {
-        this.graphics.clear();
-        this.graphics.beginFill(0x222222);
-        this.graphics.drawRect(0, 0, this._width, this._height);
-        this.graphics.endFill();
+        var bg = new egret.Shape();
+        bg.graphics.clear();
+        bg.graphics.beginFill(0x222222);
+        bg.graphics.drawRect(0, 0, this.width, this.height);
+        bg.graphics.endFill();
+        this.addChild(bg);
     };
     StartPanelUI.prototype.addTitle = function () {
         var title = new egret.TextField();
         title.text = "弹力球";
         title.size = 80;
-        title.x = this._width / 2 - title.width / 2;
-        title.y = this._height / 4;
+        title.x = this.width / 2 - title.width / 2;
+        title.y = this.height / 4;
         this.addChild(title);
     };
-    StartPanelUI.prototype.addButton = function () {
-        this._startBtn = new ButtonUI();
-        this._startBtn.label = "开始";
-        this._startBtn.x = this._width / 2 - this._startBtn.width / 2;
-        this._startBtn.y = this._height / 1.5;
-        this.addChild(this._startBtn);
-    };
     return StartPanelUI;
-}(egret.Sprite));
+}(eui.Group));
 __reflect(StartPanelUI.prototype, "StartPanelUI");
 //# sourceMappingURL=StartPanelUI.js.map

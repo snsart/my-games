@@ -4,7 +4,7 @@ class Bat extends egret.Sprite{
 	private _batBody:p2.Body;
 	private _bat:egret.Sprite;
 	private _isTouch:boolean;
-	private _batWidth:number=100;
+	private _batWidth:number=150;
 	private _force:number[];
 	private _lastPosition:number;
 
@@ -34,7 +34,7 @@ class Bat extends egret.Sprite{
 
 		let batShape:p2.Box=new p2.Box({
 			width:this._batWidth,
-			height:80	
+			height:160	
 		});
 		this._batBody.addShape(batShape);
 		this._world.addBody(this._batBody);

@@ -5,6 +5,15 @@
   "target": {
     "current": "web"
   },
+  "eui": {
+    "exmlRoot": [
+      "resource/eui_skins"
+    ],
+    "themes": [
+      "resource/default.thm.json"
+    ],
+    "exmlPublishPolicy": "commonjs"
+  },
   "modules": [
     {
       "name": "egret"
@@ -20,6 +29,9 @@
     },
     {
       "name": "socket"
+    },
+    {
+      "name": "eui"
     },
     {
       "name": "physics",

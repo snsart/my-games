@@ -12,7 +12,7 @@ var Bat = (function (_super) {
     __extends(Bat, _super);
     function Bat(stage) {
         var _this = _super.call(this) || this;
-        _this._batWidth = 100;
+        _this._batWidth = 150;
         _this._world = World.getInstance();
         _this._stage = stage;
         _this._bat = new egret.Sprite();
@@ -42,7 +42,7 @@ var Bat = (function (_super) {
         });
         var batShape = new p2.Box({
             width: this._batWidth,
-            height: 80
+            height: 160
         });
         this._batBody.addShape(batShape);
         this._world.addBody(this._batBody);

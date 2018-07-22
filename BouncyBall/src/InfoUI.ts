@@ -7,12 +7,12 @@ class InfoUI extends egret.Sprite {
 		this.create();
 	}
 
-	public set score(_score:number){
+	public set value(_score:number){
 		this._score=_score;
 		this._inputTxt.text=String(this._score);
 	}
 
-	public get score():number{
+	public get value():number{
 		return this._score;
 	}
 

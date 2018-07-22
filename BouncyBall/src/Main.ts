@@ -5,6 +5,12 @@ class Main extends egret.DisplayObjectContainer {
     private _ballBody:p2.Body;
     private _ball:Ball;
     private _bat:Bat;
+    private _startPanel:StartPanelUI;
+    private _score:InfoUI;
+    private _time:InfoUI;
+    private _timer:egret.Timer;
+    private _bricks:Brick[];
+    private _endPanel:endPanelUI;
 
     public constructor() {
         super();
@@ -25,6 +31,12 @@ class Main extends egret.DisplayObjectContainer {
             egret.ticker.resume();
         }
 
+        //inject the custom material parser
+        //注入自定义的素材解析器
+        let assetAdapter = new AssetAdapter();
+        egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
+        egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
+
         this.runGame().catch(e => {
             console.log(e);
         })
@@ -40,12 +52,25 @@ class Main extends egret.DisplayObjectContainer {
             const loadingView = new LoadingUI();
             this.stage.addChild(loadingView);
             await RES.loadConfig("resource/default.res.json", "resource/");
+            await this.loadTheme();
             await RES.loadGroup("preload", 0, loadingView);
             this.stage.removeChild(loadingView);
         }
         catch (e) {
             console.error(e);
         }
+    }
+
+    private loadTheme() {
+        return new Promise((resolve, reject) => {
+            // load skin theme configuration file, you can manually modify the file. And replace the default skin.
+            //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
+            let theme = new eui.Theme("resource/default.thm.json", this.stage);
+            theme.addEventListener(eui.UIEvent.COMPLETE, () => {
+                resolve();
+            }, this);
+
+        })
     }
 
     private textfield: egret.TextField;
@@ -55,10 +80,19 @@ class Main extends egret.DisplayObjectContainer {
      * Create a game scene
      */
     private createGameScene() {
+
         this._world=World.getInstance();
-        let startPanel:StartPanelUI=new StartPanelUI(this.stage.stageWidth,this.stage.stageHeight);
-        //this.stage.addChild(startPanel);
-        this.initMainScene()
+        this._startPanel=new StartPanelUI(this.stage.stageWidth,this.stage.stageHeight);
+        this.stage.addChild( this._startPanel);
+
+        this._startPanel.startBtn.addEventListener("touchBegin",(e)=>{
+            this.stage.removeChild(this._startPanel);
+            this.initMainScene();
+        },this);
+
+        this._endPanel=new endPanelUI(this.stage.stageWidth,this.stage.stageHeight);
+        
+        
     }
 
     private initMainScene(){
@@ -75,20 +109,26 @@ class Main extends egret.DisplayObjectContainer {
 
         egret.startTick(this.moveBall,this);
         let that=this;
+
         this._world.on("beginContact",(e)=>{
              if(e.bodyA.displays&&e.bodyA.displays[0] instanceof Brick){
+                 this._score.value++;
                  (e.bodyA.displays[0] as Brick).destroy();
              }else if(e.bodyB.displays&&e.bodyB.displays[0] instanceof Brick){
+                 this._score.value++;
                  (e.bodyB.displays[0] as Brick).destroy();
              }
 
+             if((e.bodyA==this._ball.ballBody&&e.bodyB.id==3)||(e.bodyB==this._ball.ballBody&&e.bodyA.id==3)){
+                this.gameOver();
+             }
         })
 
         this._world.on("preSolve",(e)=>{
             for(let i=0;i<e.contactEquations.length;i++){
                 var eq=e.contactEquations[i];
                 if((eq.bodyA==this._ball.ballBody&&eq.bodyB==this._bat.body)||(eq.bodyB==this._ball.ballBody&&eq.bodyA==this._bat.body)){
-                    //如何碰到bat的顶端，则进行反弹
+                    //如果碰到bat的顶端，则进行反弹
                     var y=eq.normalA[1];
                     if(y!=0){
                         this._ball.ballBody.applyImpulse(this._bat.force,[0,0]);
@@ -96,6 +136,13 @@ class Main extends egret.DisplayObjectContainer {
                 }
             }
         })
+
+        //计时
+        this._timer=new egret.Timer(1000);
+        this._timer.addEventListener(egret.TimerEvent.TIMER,(e)=>{
+            this._time.value++;
+        },this);
+        this._timer.start();
         
     }
 
@@ -116,21 +163,23 @@ class Main extends egret.DisplayObjectContainer {
     }
 
     private initInfoPanel(){
-        let score:InfoUI=new InfoUI();
-        score.label="score";
-        score.x=20;
-        score.y=10;
-        this.stage.addChild(score);
-        let time:InfoUI=new InfoUI();
-        time.label="time";
-        time.x=400;
-        time.y=10;
-        this.stage.addChild(time);
+        this._score=new InfoUI();
+        this._score.label="score";
+        this._score.x=20;
+        this._score.y=10;
+        this._score.value=0;
+        this.stage.addChild(this._score);
+        this._time=new InfoUI();
+        this._time.label="time";
+        this._time.x=400;
+        this._time.y=10;
+        this._time.value=0;
+        this.stage.addChild(this._time);
     }
 
     private addBoundary(){
         this.addStaticPanel(10,50,0,1,this.stage.stageWidth-20);//top
-         this.addStaticPanel(this.stage.stageWidth-10,50,Math.PI/2,3,this.stage.stageHeight-60);//buttom
+         this.addStaticPanel(this.stage.stageWidth-10,50,Math.PI/2,2,this.stage.stageHeight-60);//right
         this.addStaticPanel(this.stage.stageWidth-10,this.stage.stageHeight-10,Math.PI,3,this.stage.stageWidth-20);//buttom
         this.addStaticPanel(10,this.stage.stageHeight-10,270*Math.PI/180,4,this.stage.stageHeight-60);//left
     }
@@ -161,17 +210,42 @@ class Main extends egret.DisplayObjectContainer {
     }
 
     private addBricks(){
+        this._bricks=[];
         for(let i=0;i<=8;i++){
             for(let j=0;j<=5;j++){
                 let brick:Brick=new Brick();
                 brick.brickBody.position[0]=80+i*60;
                 brick.brickBody.position[1]=200+j*40;
                 brick.render();
+                this._bricks.push(brick);
                 this.addChild(brick);
             }
         }
-    }
+    } 
 
-    
+    private resetGame(){
+        this._score.value=0;
+        this._time.value=0;
+        this._timer.reset();
+        this._bricks.forEach((ele)=>{
+            this._world.addBody(ele.brickBody);
+            this.addChild(ele);
+        },this);
+        this._ball.ballBody.position[0]=200;
+        this._ball.ballBody.position[1]=400;
+    } 
+
+    private gameOver(){
+        this._timer.stop();
+        this.stage.addChild(this._endPanel);
+        this._endPanel.score.value=this._score.value;
+        this._endPanel.time.value=this._time.value;
+        if(!this._endPanel.replayBtn.hasEventListener("touchBegin")){
+            this._endPanel.replayBtn.addEventListener("touchBegin",(e)=>{
+                this.stage.removeChild(this._endPanel);
+                this.resetGame();
+            },this);
+        }
+    }
 
 }

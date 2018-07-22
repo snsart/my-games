@@ -6,19 +6,23 @@
 		"libs/modules/game/game.js",
 		"libs/modules/tween/tween.js",
 		"libs/modules/socket/socket.js",
+		"libs/modules/eui/eui.js",
 		"libs/modules/physics/physics.js",
 		"libs/modules/promise/promise.js"
 	],
 	"game": [
+		"bin-debug/AssetAdapter.js",
 		"bin-debug/Ball.js",
 		"bin-debug/Bat.js",
 		"bin-debug/Brick.js",
 		"bin-debug/ButtonUI.js",
+		"bin-debug/endPanelUI.js",
 		"bin-debug/InfoUI.js",
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
 		"bin-debug/Platform.js",
 		"bin-debug/StartPanelUI.js",
+		"bin-debug/ThemeAdapter.js",
 		"bin-debug/World.js"
 	]
 }

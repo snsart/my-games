@@ -16,7 +16,7 @@ var InfoUI = (function (_super) {
         _this.create();
         return _this;
     }
-    Object.defineProperty(InfoUI.prototype, "score", {
+    Object.defineProperty(InfoUI.prototype, "value", {
         get: function () {
             return this._score;
         },

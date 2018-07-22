@@ -60,6 +60,11 @@ var Main = (function (_super) {
         egret.lifecycle.onResume = function () {
             egret.ticker.resume();
         };
+        //inject the custom material parser
+        //注入自定义的素材解析器
+        var assetAdapter = new AssetAdapter();
+        egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
+        egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
         this.runGame().catch(function (e) {
             console.log(e);
         });
@@ -83,24 +88,38 @@ var Main = (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 4, , 5]);
                         loadingView = new LoadingUI();
                         this.stage.addChild(loadingView);
                         return [4 /*yield*/, RES.loadConfig("resource/default.res.json", "resource/")];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, RES.loadGroup("preload", 0, loadingView)];
+                        return [4 /*yield*/, this.loadTheme()];
                     case 2:
                         _a.sent();
-                        this.stage.removeChild(loadingView);
-                        return [3 /*break*/, 4];
+                        return [4 /*yield*/, RES.loadGroup("preload", 0, loadingView)];
                     case 3:
+                        _a.sent();
+                        this.stage.removeChild(loadingView);
+                        return [3 /*break*/, 5];
+                    case 4:
                         e_1 = _a.sent();
                         console.error(e_1);
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
             });
+        });
+    };
+    Main.prototype.loadTheme = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            // load skin theme configuration file, you can manually modify the file. And replace the default skin.
+            //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
+            var theme = new eui.Theme("resource/default.thm.json", _this.stage);
+            theme.addEventListener(eui.UIEvent.COMPLETE, function () {
+                resolve();
+            }, _this);
         });
     };
     /**
@@ -108,10 +127,15 @@ var Main = (function (_super) {
      * Create a game scene
      */
     Main.prototype.createGameScene = function () {
+        var _this = this;
         this._world = World.getInstance();
-        var startPanel = new StartPanelUI(this.stage.stageWidth, this.stage.stageHeight);
-        //this.stage.addChild(startPanel);
-        this.initMainScene();
+        this._startPanel = new StartPanelUI(this.stage.stageWidth, this.stage.stageHeight);
+        this.stage.addChild(this._startPanel);
+        this._startPanel.startBtn.addEventListener("touchBegin", function (e) {
+            _this.stage.removeChild(_this._startPanel);
+            _this.initMainScene();
+        }, this);
+        this._endPanel = new endPanelUI(this.stage.stageWidth, this.stage.stageHeight);
     };
     Main.prototype.initMainScene = function () {
         var _this = this;
@@ -127,17 +151,22 @@ var Main = (function (_super) {
         var that = this;
         this._world.on("beginContact", function (e) {
             if (e.bodyA.displays && e.bodyA.displays[0] instanceof Brick) {
+                _this._score.value++;
                 e.bodyA.displays[0].destroy();
             }
             else if (e.bodyB.displays && e.bodyB.displays[0] instanceof Brick) {
+                _this._score.value++;
                 e.bodyB.displays[0].destroy();
+            }
+            if ((e.bodyA == _this._ball.ballBody && e.bodyB.id == 3) || (e.bodyB == _this._ball.ballBody && e.bodyA.id == 3)) {
+                _this.gameOver();
             }
         });
         this._world.on("preSolve", function (e) {
-            console.log(e);
             for (var i = 0; i < e.contactEquations.length; i++) {
                 var eq = e.contactEquations[i];
                 if ((eq.bodyA == _this._ball.ballBody && eq.bodyB == _this._bat.body) || (eq.bodyB == _this._ball.ballBody && eq.bodyA == _this._bat.body)) {
+                    //如果碰到bat的顶端，则进行反弹
                     var y = eq.normalA[1];
                     if (y != 0) {
                         _this._ball.ballBody.applyImpulse(_this._bat.force, [0, 0]);
@@ -145,6 +174,12 @@ var Main = (function (_super) {
                 }
             }
         });
+        //计时
+        this._timer = new egret.Timer(1000);
+        this._timer.addEventListener(egret.TimerEvent.TIMER, function (e) {
+            _this._time.value++;
+        }, this);
+        this._timer.start();
     };
     Main.prototype.moveBall = function (timeStamp) {
         this._world.step(1 / 60, 0.1, 10);
@@ -161,20 +196,22 @@ var Main = (function (_super) {
         this.addChild(backGround);
     };
     Main.prototype.initInfoPanel = function () {
-        var score = new InfoUI();
-        score.label = "score";
-        score.x = 20;
-        score.y = 10;
-        this.stage.addChild(score);
-        var time = new InfoUI();
-        time.label = "time";
-        time.x = 400;
-        time.y = 10;
-        this.stage.addChild(time);
+        this._score = new InfoUI();
+        this._score.label = "score";
+        this._score.x = 20;
+        this._score.y = 10;
+        this._score.value = 0;
+        this.stage.addChild(this._score);
+        this._time = new InfoUI();
+        this._time.label = "time";
+        this._time.x = 400;
+        this._time.y = 10;
+        this._time.value = 0;
+        this.stage.addChild(this._time);
     };
     Main.prototype.addBoundary = function () {
         this.addStaticPanel(10, 50, 0, 1, this.stage.stageWidth - 20); //top
-        this.addStaticPanel(this.stage.stageWidth - 10, 50, Math.PI / 2, 3, this.stage.stageHeight - 60); //buttom
+        this.addStaticPanel(this.stage.stageWidth - 10, 50, Math.PI / 2, 2, this.stage.stageHeight - 60); //right
         this.addStaticPanel(this.stage.stageWidth - 10, this.stage.stageHeight - 10, Math.PI, 3, this.stage.stageWidth - 20); //buttom
         this.addStaticPanel(10, this.stage.stageHeight - 10, 270 * Math.PI / 180, 4, this.stage.stageHeight - 60); //left
     };
@@ -198,14 +235,42 @@ var Main = (function (_super) {
         this.addChild(planeMc);
     };
     Main.prototype.addBricks = function () {
+        this._bricks = [];
         for (var i = 0; i <= 8; i++) {
             for (var j = 0; j <= 5; j++) {
                 var brick = new Brick();
                 brick.brickBody.position[0] = 80 + i * 60;
                 brick.brickBody.position[1] = 200 + j * 40;
                 brick.render();
+                this._bricks.push(brick);
                 this.addChild(brick);
             }
+        }
+    };
+    Main.prototype.resetGame = function () {
+        var _this = this;
+        this._score.value = 0;
+        this._time.value = 0;
+        this._timer.reset();
+        this._bricks.forEach(function (ele) {
+            _this._world.addBody(ele.brickBody);
+            _this.addChild(ele);
+        }, this);
+        this._ball.ballBody.position[0] = 200;
+        this._ball.ballBody.position[1] = 400;
+    };
+    Main.prototype.gameOver = function () {
+        var _this = this;
+        this._timer.stop();
+        this.stage.addChild(this._endPanel);
+        this._endPanel.score.value = this._score.value;
+        this._endPanel.time.value = this._time.value;
+        console.log(this._endPanel.replayBtn.hasEventListener("touchBegin"));
+        if (!this._endPanel.replayBtn.hasEventListener("touchBegin")) {
+            this._endPanel.replayBtn.addEventListener("touchBegin", function (e) {
+                _this.stage.removeChild(_this._endPanel);
+                _this.resetGame();
+            }, this);
         }
     };
     return Main;
