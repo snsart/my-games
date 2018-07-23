@@ -30,7 +30,7 @@ var Ball = (function (_super) {
     Ball.prototype.addBall = function () {
         this._ballBody = new p2.Body({
             mass: 1,
-            position: [200, 400]
+            position: [200, 500]
         });
         var ballShape = new p2.Circle({
             radius: 15

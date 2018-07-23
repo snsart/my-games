@@ -29,7 +29,7 @@ class Bat extends egret.Sprite{
 
 	private createBat(){
 		this._batBody=new p2.Body({
-			position:[this._stage.stageWidth/2,this._stage.stageHeight-50]
+			position:[this._stage.stageWidth/2,this._stage.stageHeight-90]
 		});
 
 		let batShape:p2.Box=new p2.Box({
@@ -61,7 +61,7 @@ class Bat extends egret.Sprite{
 		this._stage.addEventListener(egret.TouchEvent.TOUCH_MOVE,(e)=>{
 			if(this._isTouch){
 				this._batBody.position[0]=Math.max(this._batWidth/2+10,Math.min(e.stageX,this._stage.stageWidth-10-this._batWidth/2));
-				this.force[0]=(this._lastPosition==0?0:this._batBody.position[0]-this._lastPosition)*100;
+				this.force[0]=(this._lastPosition==0?0:this._batBody.position[0]-this._lastPosition)*20;
 				this._lastPosition=this._batBody.position[0];
 				this.render(this._batBody);
 			}

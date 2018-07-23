@@ -7,7 +7,7 @@ class endPanelUI extends eui.Group{
         super();
 		this.width=width;
 		this.height=height;
-		this.createChildren();
+		this._replayBtn = new eui.Button();
     }
     protected createChildren(): void {
         super.createChildren();
@@ -25,12 +25,12 @@ class endPanelUI extends eui.Group{
 		this._time.x=this.width/2-this._time.width/2;
 		this._time.y=this._score.y+50;
 		this.addChild(this._time);
-
-        this._replayBtn = new eui.Button();
+  
         this._replayBtn.label = "replay";
 		this._replayBtn.horizontalCenter=0;
 		this._replayBtn.y=this._time.y+50;
         this.addChild(this._replayBtn);
+		console.log("addBtn");
     }
 
 

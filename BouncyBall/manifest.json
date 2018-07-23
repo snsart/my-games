@@ -11,13 +11,13 @@
 		"libs/modules/promise/promise.js"
 	],
 	"game": [
+		"bin-debug/InfoUI.js",
 		"bin-debug/AssetAdapter.js",
-		"bin-debug/Ball.js",
 		"bin-debug/Bat.js",
 		"bin-debug/Brick.js",
 		"bin-debug/ButtonUI.js",
 		"bin-debug/endPanelUI.js",
-		"bin-debug/InfoUI.js",
+		"bin-debug/Ball.js",
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
 		"bin-debug/Platform.js",

@@ -14,7 +14,7 @@ var endPanelUI = (function (_super) {
         var _this = _super.call(this) || this;
         _this.width = width;
         _this.height = height;
-        _this.createChildren();
+        _this._replayBtn = new eui.Button();
         return _this;
     }
     endPanelUI.prototype.createChildren = function () {
@@ -31,11 +31,11 @@ var endPanelUI = (function (_super) {
         this._time.x = this.width / 2 - this._time.width / 2;
         this._time.y = this._score.y + 50;
         this.addChild(this._time);
-        this._replayBtn = new eui.Button();
         this._replayBtn.label = "replay";
         this._replayBtn.horizontalCenter = 0;
         this._replayBtn.y = this._time.y + 50;
         this.addChild(this._replayBtn);
+        console.log("addBtn");
     };
     Object.defineProperty(endPanelUI.prototype, "replayBtn", {
         get: function () {
