@@ -1,4 +1,4 @@
-/**
+var egret = window.egret;/**
  * The MIT License (MIT)
  *
  * Copyright (c) 2015 p2.js authors
