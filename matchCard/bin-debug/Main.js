@@ -77,7 +77,7 @@ var Main = (function (_super) {
         var _this = _super.call(this) || this;
         _this.cards = [];
         _this.cardsPos = [];
-        _this.leaveCards = 52;
+        _this.leaveCards = 54;
         _this.dealCards = [];
         _this.selectedCards = [];
         _this.endTarget = new egret.Point();
@@ -191,6 +191,15 @@ var Main = (function (_super) {
                 this.addChild(card);
                 this.cards.push(card);
             }
+        }
+        for (var j = 1; j <= 2; j++) {
+            var faceId = "e" + j;
+            var backId = "cards_json#back";
+            var card = new Card(faceId, backId);
+            card.touchEnabled = true;
+            card.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.cardClickHandler, this);
+            this.addChild(card);
+            this.cards.push(card);
         }
     };
     Main.prototype.cardClickHandler = function (e) {

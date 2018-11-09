@@ -83,7 +83,7 @@ class Main extends egret.DisplayObjectContainer {
     private textfield: egret.TextField;
     private cards:Card[]=[];
     private cardsPos:egret.Point[]=[];
-    private leaveCards:number=52;
+    private leaveCards:number=54;
     private dealCards:Card[]=[];
     private selectedCards=[];
     private endTarget:egret.Point=new egret.Point();
@@ -148,6 +148,17 @@ class Main extends egret.DisplayObjectContainer {
                 this.cards.push(card);
             }
         }
+
+        for(let j=1;j<=2;j++){
+                let faceId="e"+j;
+                let backId="cards_json#back";
+                let card:Card=new Card(faceId,backId);
+                card.touchEnabled=true;
+                card.addEventListener(egret.TouchEvent.TOUCH_BEGIN,this.cardClickHandler,this);
+                this.addChild(card);
+                this.cards.push(card);
+        }
+
     }
 
     private cardClickHandler(e:egret.TouchEvent){
