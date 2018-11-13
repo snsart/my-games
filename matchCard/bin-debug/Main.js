@@ -82,6 +82,7 @@ var Main = (function (_super) {
         _this.selectedCards = [];
         _this.endTarget = new egret.Point();
         _this.faceCards = [];
+        _this.dealing = false; //是否正在发牌
         _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.onAddToStage, _this);
         return _this;
     }
@@ -155,13 +156,48 @@ var Main = (function (_super) {
         gamebg.x = 250;
         gamebg.y = 50;
         this.addChild(gamebg);
+        var startBtn = this.createBitmapByName("startBtn");
+        startBtn.x = 70;
+        startBtn.y = 580;
+        this.addChild(startBtn);
+        startBtn.touchEnabled = true;
+        startBtn.addEventListener(egret.TouchEvent.TOUCH_BEGIN, function () {
+            if (this.leaveCards == 54 && !this.dealing) {
+                this.deal(16, this.cardsPos);
+            }
+        }, this);
+        var updateBtn = this.createBitmapByName("updateBtn");
+        updateBtn.x = 70;
+        updateBtn.y = 660;
+        this.addChild(updateBtn);
+        updateBtn.touchEnabled = true;
+        updateBtn.addEventListener(egret.TouchEvent.TOUCH_BEGIN, function () {
+            if (!this.dealing) {
+                this.initGame();
+            }
+        }, this);
         this.endTarget.x = 900;
         this.endTarget.y = 50;
         this.createCards();
         this.initCards();
         this.setCardPos();
         this.setdealCards();
-        this.deal(16, this.cardsPos);
+        this.test();
+    };
+    Main.prototype.test = function () {
+        for (var i = 0; i < 54; i++) {
+            this.faceCards.push(this.cards[i]);
+            this.cards[i].x = this.endTarget.x;
+            this.cards[i].y = 50 + i * 5;
+            this.setChildIndex(this.cards[i], i + 20);
+        }
+        this.gameOver();
+    };
+    Main.prototype.initGame = function () {
+        this.initCards();
+        this.cleardealCards();
+        this.endTarget.y = 50;
+        this.faceCards = [];
     };
     Main.prototype.setCardPos = function () {
         for (var i = 0; i < 4; i++) {
@@ -176,6 +212,11 @@ var Main = (function (_super) {
     Main.prototype.setdealCards = function () {
         for (var i = 0; i < 16; i++) {
             this.dealCards.push(null);
+        }
+    };
+    Main.prototype.cleardealCards = function () {
+        for (var i = 0; i < 16; i++) {
+            this.dealCards[i] = null;
         }
     };
     Main.prototype.createCards = function () {
@@ -207,19 +248,21 @@ var Main = (function (_super) {
         if (!card.isdeal || this.selectedCards.length >= 2) {
             return;
         }
-        if (card.isface) {
+        if (card.state != CardState.BACK) {
             return;
         }
         this.selectedCards.push(card);
         card.reverse();
         if (this.selectedCards.length == 2) {
+            var firstType = this.selectedCards[0].faceID.substr(0, 1);
+            var secondType = this.selectedCards[1].faceID.substr(0, 1);
             var firstId = this.selectedCards[0].faceID.slice(1);
             var secondId = this.selectedCards[1].faceID.slice(1);
-            if (firstId != secondId) {
-                this.wrong();
+            if ((firstType == "e" && secondType == "e") || (firstType != "e" && secondType != "e" && firstId == secondId)) {
+                this.right();
             }
             else {
-                this.right();
+                this.wrong();
             }
         }
     };
@@ -248,17 +291,44 @@ var Main = (function (_super) {
                     this.deal(2, [nullPot1, nullPot2]);
                 }
                 this.selectedCards = [];
+                if (this.faceCards.length == 54) {
+                    this.gameOver();
+                }
             }, this, 200);
         }, this, 1000);
+    };
+    Main.prototype.gameOver = function () {
+        for (var i = 0; i < this.faceCards.length; i++) {
+            egret.setTimeout(function () {
+                var card = this.faceCards.pop();
+                console.log(card);
+                var target = new egret.Point();
+                target.x = -400 + Math.random() * this.stage.stageWidth;
+                target.y = Math.random() * this.stage.stageHeight + 200;
+                egret.Tween.get(card).to({ x: target.x, y: target.y, alpha: 0, rotation: 360 }, 1000);
+            }, this, (54 - i) * 50);
+        }
+        egret.setTimeout(function () {
+            this.initGame();
+        }, this, 4000);
     };
     Main.prototype.initCards = function () {
         this.shuffer(this.cards);
         for (var i = 0; i < this.cards.length; i++) {
             this.addChild(this.cards[i]);
+            this.cards[i].alpha = 0;
+            this.cards[i].rotation = 0;
             this.cards[i].x = 125;
             this.cards[i].y = 50 + i * 5;
+            this.cards[i].isdeal = false;
+            if (this.cards[i].state != CardState.BACK) {
+                this.cards[i].reverse();
+            }
             this.setChildIndex(this.cards[i], i + 10);
+            egret.Tween.get(this.cards[i]).to({ alpha: 1 }, 500);
         }
+        this.selectedCards = [];
+        this.leaveCards = 54;
     };
     Main.prototype.shuffer = function (arr) {
         for (var i = 0, len = arr.length; i < len; i++) {
@@ -269,6 +339,7 @@ var Main = (function (_super) {
         }
     };
     Main.prototype.deal = function (cardNums, cardsPos) {
+        this.dealing = true;
         var _loop_1 = function (i, j) {
             egret.setTimeout(function () {
                 var card = this.cards[i];
@@ -287,6 +358,7 @@ var Main = (function (_super) {
         }
         egret.setTimeout(function () {
             this.leaveCards -= cardNums;
+            this.dealing = false;
         }, this, cardNums * 110 + 10);
     };
     /**

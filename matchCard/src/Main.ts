@@ -88,6 +88,7 @@ class Main extends egret.DisplayObjectContainer {
     private selectedCards=[];
     private endTarget:egret.Point=new egret.Point();
     private faceCards=[];
+    private dealing:boolean=false;//是否正在发牌
 
     /**
      * 创建游戏场景
@@ -106,15 +107,53 @@ class Main extends egret.DisplayObjectContainer {
         gamebg.y=50;
         this.addChild(gamebg);
 
+        let startBtn:egret.Bitmap=this.createBitmapByName("startBtn");
+        startBtn.x=70;
+        startBtn.y=580;
+        this.addChild(startBtn);
+        startBtn.touchEnabled=true;
+        startBtn.addEventListener(egret.TouchEvent.TOUCH_BEGIN,function(){
+            if(this.leaveCards==54&&!this.dealing){
+                this.deal(16,this.cardsPos);
+            }
+        },this);
+
+        let updateBtn:egret.Bitmap=this.createBitmapByName("updateBtn");
+        updateBtn.x=70;
+        updateBtn.y=660;
+        this.addChild(updateBtn);
+        updateBtn.touchEnabled=true;
+        updateBtn.addEventListener(egret.TouchEvent.TOUCH_BEGIN,function(){
+            if(!this.dealing){
+                this.initGame();
+            }
+        },this);
+
         this.endTarget.x=900;
         this.endTarget.y=50;
         
-
         this.createCards();
         this.initCards();
         this.setCardPos();
         this.setdealCards();
-        this.deal(16,this.cardsPos);
+         /*this.test();*/
+    }
+
+    private test(){
+        for(var i=0;i<54;i++){
+            this.faceCards.push(this.cards[i]);
+            this.cards[i].x=this.endTarget.x;
+            this.cards[i].y=50+i*5;
+            this.setChildIndex(this.cards[i],i+20);
+        }
+        this.gameOver();
+    }
+
+    private initGame(){
+        this.initCards();
+        this.cleardealCards();
+        this.endTarget.y=50;
+        this.faceCards=[];
     }
 
     private setCardPos(){
@@ -131,6 +170,12 @@ class Main extends egret.DisplayObjectContainer {
     private setdealCards(){
         for(var i=0;i<16;i++){
             this.dealCards.push(null);
+        }
+    }
+
+    private cleardealCards(){
+        for(var i=0;i<16;i++){
+            this.dealCards[i]=null;
         }
     }
 
@@ -158,7 +203,6 @@ class Main extends egret.DisplayObjectContainer {
                 this.addChild(card);
                 this.cards.push(card);
         }
-
     }
 
     private cardClickHandler(e:egret.TouchEvent){
@@ -167,20 +211,22 @@ class Main extends egret.DisplayObjectContainer {
             return;
         }
 
-        if(card.isface){
+        if(card.state!=CardState.BACK){
             return;
         }
-
 
         this.selectedCards.push(card);
         card.reverse();
         if(this.selectedCards.length==2){
+            let firstType:String=this.selectedCards[0].faceID.substr(0,1);
+            let secondType:String=this.selectedCards[1].faceID.substr(0,1);
             let firstId:String=this.selectedCards[0].faceID.slice(1);
             let secondId:String=this.selectedCards[1].faceID.slice(1);
-            if(firstId!=secondId){
-               this.wrong();
+            
+            if((firstType=="e"&&secondType=="e")||(firstType!="e"&&secondType!="e"&&firstId==secondId)){
+                 this.right();
             }else{
-               this.right();
+               this.wrong();
             }
         }
     }
@@ -214,19 +260,49 @@ class Main extends egret.DisplayObjectContainer {
                    this.deal(2,[nullPot1,nullPot2]);
                 }
                 this.selectedCards=[]; 
+                if(this.faceCards.length==54){
+                    this.gameOver();
+                }
             },this,200) 
 
         },this,1000);
+    }
+
+    private gameOver(){
+        for(let i=0;i<this.faceCards.length;i++){
+            egret.setTimeout(function(){
+                let card=this.faceCards.pop();
+                console.log(card);
+                let target:egret.Point=new egret.Point();
+                target.x=-400+Math.random()*this.stage.stageWidth;
+                target.y=Math.random()*this.stage.stageHeight+200;
+                egret.Tween.get(card).to({x:target.x,y:target.y,alpha:0,rotation:360},1000);
+            },this,(54-i)*50);
+        }
+
+        egret.setTimeout(function(){
+            this.initGame();
+        },this,4000);
+
     }
 
     private initCards(){
         this.shuffer(this.cards);
         for(var i=0;i<this.cards.length;i++){
             this.addChild(this.cards[i]);
+            this.cards[i].alpha=0;
+            this.cards[i].rotation=0;
             this.cards[i].x=125;
             this.cards[i].y=50+i*5;
+            this.cards[i].isdeal=false;
+            if(this.cards[i].state!=CardState.BACK){
+                this.cards[i].reverse();
+            }
             this.setChildIndex(this.cards[i],i+10);
+            egret.Tween.get(this.cards[i]).to({alpha:1},500);
         }
+        this.selectedCards=[]; 
+        this.leaveCards=54;
     }
 
     private shuffer(arr){
@@ -239,6 +315,7 @@ class Main extends egret.DisplayObjectContainer {
     }
 
     private deal(cardNums:number,cardsPos:egret.Point[]){
+        this.dealing=true;
         for(let i=this.leaveCards-1,j=0;i>=this.leaveCards-cardNums;i--,j++){
             egret.setTimeout(function(){
                 let card=this.cards[i];
@@ -254,6 +331,7 @@ class Main extends egret.DisplayObjectContainer {
 
         egret.setTimeout(function(){
             this.leaveCards-=cardNums;
+            this.dealing=false;
         },this,cardNums*110+10);
     }
 

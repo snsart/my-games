@@ -8,11 +8,16 @@ var __extends = this && this.__extends || function __extends(t, e) {
 for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
 r.prototype = e.prototype, t.prototype = new r();
 };
+var CardState;
+(function (CardState) {
+    CardState[CardState["FACE"] = 0] = "FACE";
+    CardState[CardState["BACK"] = 1] = "BACK";
+    CardState[CardState["REVERSING"] = 2] = "REVERSING";
+})(CardState || (CardState = {}));
 var Card = (function (_super) {
     __extends(Card, _super);
     function Card(_faceID, _backID) {
         var _this = _super.call(this) || this;
-        _this._isface = false;
         _this._speed = 0.1;
         _this._isdeal = false;
         _this.width = 120;
@@ -30,9 +35,9 @@ var Card = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Card.prototype, "isface", {
+    Object.defineProperty(Card.prototype, "state", {
         get: function () {
-            return this._isface;
+            return this._state;
         },
         enumerable: true,
         configurable: true
@@ -48,7 +53,7 @@ var Card = (function (_super) {
         configurable: true
     });
     Card.prototype.init = function () {
-        this._isface = true;
+        this._state = CardState.FACE;
         this.reverse();
     };
     Card.prototype.draw = function () {
@@ -61,15 +66,19 @@ var Card = (function (_super) {
         this._backImg.width = this.width;
         this._backImg.height = this.height;
         this.addChild(this._backImg);
+        this._state = CardState.BACK;
     };
     Card.prototype.reverse = function () {
-        this._isface = !this._isface;
-        egret.startTick(this.enterFrameHandler, this);
+        if (this._state != CardState.REVERSING) {
+            this._stateBeforeReverse = this._state;
+            this._state = CardState.REVERSING;
+            egret.startTick(this.enterFrameHandler, this);
+        }
     };
     Card.prototype.enterFrameHandler = function () {
         this.scaleX -= this._speed;
         if (Math.abs(this.scaleX) < 0.1) {
-            if (!this._isface) {
+            if (this._stateBeforeReverse == CardState.FACE) {
                 if (this.getChildIndex(this._faceImg) != -1) {
                     this.removeChild(this._faceImg);
                 }
@@ -85,6 +94,12 @@ var Card = (function (_super) {
         }
         if (this.scaleX == 1) {
             egret.stopTick(this.enterFrameHandler, this);
+            if (this._stateBeforeReverse == CardState.FACE) {
+                this._state = CardState.BACK;
+            }
+            else {
+                this._state = CardState.FACE;
+            }
             this._speed = 0.1;
         }
         return true;

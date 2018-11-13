@@ -1,0 +1,30 @@
+﻿{
+	"file": "btns.png",
+
+	"frames": {
+
+	"startBtn":
+	{
+		"x":0,"y":0,"w":106,"h":62,
+		"offX":0,
+		"offY":0,
+		"sourceW":106,
+		"sourceH":62
+	},
+	"updateBtn":
+	{
+		"x":0,"y":62,"w":107,"h":62,
+		"offX":0,
+		"offY":0,
+		"sourceW":106,
+		"sourceH":62
+	}},
+	"meta": {
+		"app": "Adobe Flash Professional",
+		"version": "15.0.0.173",
+		"image": "btns.png",
+		"format": "RGBA8888",
+		"size": {"w":128,"h":128},
+		"scale": "1"
+	}
+}

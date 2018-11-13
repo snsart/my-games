@@ -1,13 +1,18 @@
-class Card extends egret.Sprite{
+enum CardState{
+	FACE=0,
+	BACK,
+	REVERSING,
+}
 
+class Card extends egret.Sprite{
 	private _faceID:string;
 	private _backID:string;
 	private _faceImg:egret.Bitmap;
 	private _backImg:egret.Bitmap;
-	private _isface:boolean=false;
-	private _mask:egret.Shape;
 	private _speed=0.1;
 	private _isdeal=false;
+	private _state:CardState;
+	private _stateBeforeReverse:CardState;
 
 	public constructor(_faceID:string,_backID:string) {
 		super();
@@ -23,8 +28,8 @@ class Card extends egret.Sprite{
 		return this._faceID;
 	}
 
-	public get isface():boolean{
-		return this._isface;
+	public get state():CardState{
+		return this._state;
 	}
 
 	public get isdeal():boolean{
@@ -36,7 +41,7 @@ class Card extends egret.Sprite{
 	}
 
 	public init():void{
-		this._isface=true;
+		this._state=CardState.FACE;
 		this.reverse();
 	}
 
@@ -52,19 +57,21 @@ class Card extends egret.Sprite{
 		this._backImg.height=this.height;
 
 		this.addChild(this._backImg);
+		this._state=CardState.BACK;
 	}
 
 	public reverse():void{
-		this._isface=!this._isface;	
-		egret.startTick(this.enterFrameHandler,this);
+		if(this._state!=CardState.REVERSING){
+			this._stateBeforeReverse=this._state;
+			this._state=CardState.REVERSING;
+			egret.startTick(this.enterFrameHandler,this);
+		}
 	}
 
-
 	private enterFrameHandler():boolean{
-		
 		this.scaleX-=this._speed;
-		if(Math.abs(this.scaleX)<0.1){	
-			if(!this._isface){
+		if(Math.abs(this.scaleX)<0.1){
+			if(this._stateBeforeReverse==CardState.FACE){
 				if(this.getChildIndex(this._faceImg)!=-1){
 					this.removeChild(this._faceImg);
 				}
@@ -77,12 +84,19 @@ class Card extends egret.Sprite{
 			}
 			this._speed=-0.1;
 		}
-		if(this.scaleX==1){
+		if(this.scaleX==1){	
 			egret.stopTick(this.enterFrameHandler,this);
+			if(this._stateBeforeReverse==CardState.FACE){
+				this._state=CardState.BACK;
+			}else{
+				this._state=CardState.FACE;
+			}
+			
 			this._speed=0.1;
 		}
-		
 		return true;
 	}
+
+	
 	
 }
