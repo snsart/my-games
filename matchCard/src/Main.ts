@@ -95,6 +95,28 @@ class Main extends egret.DisplayObjectContainer {
      * Create a game scene
      */
     private createGameScene() {
+        
+        this.addGameBackground();
+        this.addGameUI();
+        this.createCards();
+        this.setCardPos();
+        this.setdealCards();
+
+        this.initGame();
+         /*this.test();*/
+    }
+
+    private test(){
+        for(var i=0;i<54;i++){
+            this.faceCards.push(this.cards[i]);
+            this.cards[i].x=this.endTarget.x;
+            this.cards[i].y=50+i*5;
+            this.setChildIndex(this.cards[i],i+20);
+        }
+        this.gameOver();
+    }
+
+    private addGameBackground(){
         let bg:egret.Shape=new egret.Shape();
         bg.graphics.beginFill(0x284976);
         bg.graphics.drawRect(0,0,this.stage.stageWidth,this.stage.stageHeight);
@@ -106,7 +128,9 @@ class Main extends egret.DisplayObjectContainer {
         gamebg.x=250;
         gamebg.y=50;
         this.addChild(gamebg);
+    }
 
+    private addGameUI(){
         let startBtn:egret.Bitmap=this.createBitmapByName("startBtn");
         startBtn.x=70;
         startBtn.y=580;
@@ -128,55 +152,14 @@ class Main extends egret.DisplayObjectContainer {
                 this.initGame();
             }
         },this);
-
-        this.endTarget.x=900;
-        this.endTarget.y=50;
-        
-        this.createCards();
-        this.initCards();
-        this.setCardPos();
-        this.setdealCards();
-         /*this.test();*/
-    }
-
-    private test(){
-        for(var i=0;i<54;i++){
-            this.faceCards.push(this.cards[i]);
-            this.cards[i].x=this.endTarget.x;
-            this.cards[i].y=50+i*5;
-            this.setChildIndex(this.cards[i],i+20);
-        }
-        this.gameOver();
     }
 
     private initGame(){
         this.initCards();
         this.cleardealCards();
+        this.endTarget.x=900;
         this.endTarget.y=50;
         this.faceCards=[];
-    }
-
-    private setCardPos(){
-        for(let i=0;i<4;i++){
-            for(let j=0;j<4;j++){
-                let point:egret.Point=new egret.Point();
-                point.x=314+j*124;
-                point.y=54+i*172;
-                this.cardsPos.push(point);
-            }
-        }
-    }
-
-    private setdealCards(){
-        for(var i=0;i<16;i++){
-            this.dealCards.push(null);
-        }
-    }
-
-    private cleardealCards(){
-        for(var i=0;i<16;i++){
-            this.dealCards[i]=null;
-        }
     }
 
     private createCards(){
@@ -202,6 +185,48 @@ class Main extends egret.DisplayObjectContainer {
                 card.addEventListener(egret.TouchEvent.TOUCH_BEGIN,this.cardClickHandler,this);
                 this.addChild(card);
                 this.cards.push(card);
+        }
+    }
+
+    private initCards(){
+        this.shuffer(this.cards);
+        for(var i=0;i<this.cards.length;i++){
+            this.addChild(this.cards[i]);
+            this.cards[i].alpha=0;
+            this.cards[i].rotation=0;
+            this.cards[i].x=125;
+            this.cards[i].y=50+i*5;
+            this.cards[i].isdeal=false;
+            if(this.cards[i].state!=CardState.BACK){
+                this.cards[i].reverse();
+            }
+            this.setChildIndex(this.cards[i],i+10);
+            egret.Tween.get(this.cards[i]).to({alpha:1},500);
+        }
+        this.selectedCards=[]; 
+        this.leaveCards=54;
+    }
+
+    private setCardPos(){
+        for(let i=0;i<4;i++){
+            for(let j=0;j<4;j++){
+                let point:egret.Point=new egret.Point();
+                point.x=314+j*124;
+                point.y=54+i*172;
+                this.cardsPos.push(point);
+            }
+        }
+    }
+
+    private setdealCards(){
+        for(var i=0;i<16;i++){
+            this.dealCards.push(null);
+        }
+    }
+
+    private cleardealCards(){
+        for(var i=0;i<16;i++){
+            this.dealCards[i]=null;
         }
     }
 
@@ -283,36 +308,8 @@ class Main extends egret.DisplayObjectContainer {
         egret.setTimeout(function(){
             this.initGame();
         },this,4000);
-
     }
 
-    private initCards(){
-        this.shuffer(this.cards);
-        for(var i=0;i<this.cards.length;i++){
-            this.addChild(this.cards[i]);
-            this.cards[i].alpha=0;
-            this.cards[i].rotation=0;
-            this.cards[i].x=125;
-            this.cards[i].y=50+i*5;
-            this.cards[i].isdeal=false;
-            if(this.cards[i].state!=CardState.BACK){
-                this.cards[i].reverse();
-            }
-            this.setChildIndex(this.cards[i],i+10);
-            egret.Tween.get(this.cards[i]).to({alpha:1},500);
-        }
-        this.selectedCards=[]; 
-        this.leaveCards=54;
-    }
-
-    private shuffer(arr){
-        for(let i = 0,len = arr.length; i < len; i++){
-            let currentRandom = Math.floor(Math.random()*len);
-            let current = arr[i];
-            arr[i] = arr[currentRandom];
-            arr[currentRandom] = current;
-        }
-    }
 
     private deal(cardNums:number,cardsPos:egret.Point[]){
         this.dealing=true;
@@ -333,6 +330,15 @@ class Main extends egret.DisplayObjectContainer {
             this.leaveCards-=cardNums;
             this.dealing=false;
         },this,cardNums*110+10);
+    }
+
+    private shuffer(arr){
+        for(let i = 0,len = arr.length; i < len; i++){
+            let currentRandom = Math.floor(Math.random()*len);
+            let current = arr[i];
+            arr[i] = arr[currentRandom];
+            arr[currentRandom] = current;
+        }
     }
 
     /**

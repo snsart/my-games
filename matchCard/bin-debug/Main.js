@@ -146,6 +146,24 @@ var Main = (function (_super) {
      * Create a game scene
      */
     Main.prototype.createGameScene = function () {
+        this.addGameBackground();
+        this.addGameUI();
+        this.createCards();
+        this.setCardPos();
+        this.setdealCards();
+        this.initGame();
+        /*this.test();*/
+    };
+    Main.prototype.test = function () {
+        for (var i = 0; i < 54; i++) {
+            this.faceCards.push(this.cards[i]);
+            this.cards[i].x = this.endTarget.x;
+            this.cards[i].y = 50 + i * 5;
+            this.setChildIndex(this.cards[i], i + 20);
+        }
+        this.gameOver();
+    };
+    Main.prototype.addGameBackground = function () {
         var bg = new egret.Shape();
         bg.graphics.beginFill(0x284976);
         bg.graphics.drawRect(0, 0, this.stage.stageWidth, this.stage.stageHeight);
@@ -156,6 +174,8 @@ var Main = (function (_super) {
         gamebg.x = 250;
         gamebg.y = 50;
         this.addChild(gamebg);
+    };
+    Main.prototype.addGameUI = function () {
         var startBtn = this.createBitmapByName("startBtn");
         startBtn.x = 70;
         startBtn.y = 580;
@@ -176,48 +196,13 @@ var Main = (function (_super) {
                 this.initGame();
             }
         }, this);
-        this.endTarget.x = 900;
-        this.endTarget.y = 50;
-        this.createCards();
-        this.initCards();
-        this.setCardPos();
-        this.setdealCards();
-        this.test();
-    };
-    Main.prototype.test = function () {
-        for (var i = 0; i < 54; i++) {
-            this.faceCards.push(this.cards[i]);
-            this.cards[i].x = this.endTarget.x;
-            this.cards[i].y = 50 + i * 5;
-            this.setChildIndex(this.cards[i], i + 20);
-        }
-        this.gameOver();
     };
     Main.prototype.initGame = function () {
         this.initCards();
         this.cleardealCards();
+        this.endTarget.x = 900;
         this.endTarget.y = 50;
         this.faceCards = [];
-    };
-    Main.prototype.setCardPos = function () {
-        for (var i = 0; i < 4; i++) {
-            for (var j = 0; j < 4; j++) {
-                var point = new egret.Point();
-                point.x = 314 + j * 124;
-                point.y = 54 + i * 172;
-                this.cardsPos.push(point);
-            }
-        }
-    };
-    Main.prototype.setdealCards = function () {
-        for (var i = 0; i < 16; i++) {
-            this.dealCards.push(null);
-        }
-    };
-    Main.prototype.cleardealCards = function () {
-        for (var i = 0; i < 16; i++) {
-            this.dealCards[i] = null;
-        }
     };
     Main.prototype.createCards = function () {
         var type = ["a", "b", "c", "d"];
@@ -241,6 +226,44 @@ var Main = (function (_super) {
             card.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.cardClickHandler, this);
             this.addChild(card);
             this.cards.push(card);
+        }
+    };
+    Main.prototype.initCards = function () {
+        this.shuffer(this.cards);
+        for (var i = 0; i < this.cards.length; i++) {
+            this.addChild(this.cards[i]);
+            this.cards[i].alpha = 0;
+            this.cards[i].rotation = 0;
+            this.cards[i].x = 125;
+            this.cards[i].y = 50 + i * 5;
+            this.cards[i].isdeal = false;
+            if (this.cards[i].state != CardState.BACK) {
+                this.cards[i].reverse();
+            }
+            this.setChildIndex(this.cards[i], i + 10);
+            egret.Tween.get(this.cards[i]).to({ alpha: 1 }, 500);
+        }
+        this.selectedCards = [];
+        this.leaveCards = 54;
+    };
+    Main.prototype.setCardPos = function () {
+        for (var i = 0; i < 4; i++) {
+            for (var j = 0; j < 4; j++) {
+                var point = new egret.Point();
+                point.x = 314 + j * 124;
+                point.y = 54 + i * 172;
+                this.cardsPos.push(point);
+            }
+        }
+    };
+    Main.prototype.setdealCards = function () {
+        for (var i = 0; i < 16; i++) {
+            this.dealCards.push(null);
+        }
+    };
+    Main.prototype.cleardealCards = function () {
+        for (var i = 0; i < 16; i++) {
+            this.dealCards[i] = null;
         }
     };
     Main.prototype.cardClickHandler = function (e) {
@@ -312,32 +335,6 @@ var Main = (function (_super) {
             this.initGame();
         }, this, 4000);
     };
-    Main.prototype.initCards = function () {
-        this.shuffer(this.cards);
-        for (var i = 0; i < this.cards.length; i++) {
-            this.addChild(this.cards[i]);
-            this.cards[i].alpha = 0;
-            this.cards[i].rotation = 0;
-            this.cards[i].x = 125;
-            this.cards[i].y = 50 + i * 5;
-            this.cards[i].isdeal = false;
-            if (this.cards[i].state != CardState.BACK) {
-                this.cards[i].reverse();
-            }
-            this.setChildIndex(this.cards[i], i + 10);
-            egret.Tween.get(this.cards[i]).to({ alpha: 1 }, 500);
-        }
-        this.selectedCards = [];
-        this.leaveCards = 54;
-    };
-    Main.prototype.shuffer = function (arr) {
-        for (var i = 0, len = arr.length; i < len; i++) {
-            var currentRandom = Math.floor(Math.random() * len);
-            var current = arr[i];
-            arr[i] = arr[currentRandom];
-            arr[currentRandom] = current;
-        }
-    };
     Main.prototype.deal = function (cardNums, cardsPos) {
         this.dealing = true;
         var _loop_1 = function (i, j) {
@@ -360,6 +357,14 @@ var Main = (function (_super) {
             this.leaveCards -= cardNums;
             this.dealing = false;
         }, this, cardNums * 110 + 10);
+    };
+    Main.prototype.shuffer = function (arr) {
+        for (var i = 0, len = arr.length; i < len; i++) {
+            var currentRandom = Math.floor(Math.random() * len);
+            var current = arr[i];
+            arr[i] = arr[currentRandom];
+            arr[currentRandom] = current;
+        }
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。

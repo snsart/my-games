@@ -96,7 +96,4 @@ class Card extends egret.Sprite{
 		}
 		return true;
 	}
-
-	
-	
 }
