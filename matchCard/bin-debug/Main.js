@@ -196,11 +196,15 @@ var Main = (function (_super) {
                 this.initGame();
             }
         }, this);
+        this.player1 = new Player();
+        this.addChild(this.player1);
+        this.player1.x = 795;
+        this.player1.y = 50;
     };
     Main.prototype.initGame = function () {
         this.initCards();
         this.cleardealCards();
-        this.endTarget.x = 900;
+        this.endTarget.x = 885;
         this.endTarget.y = 50;
         this.faceCards = [];
     };

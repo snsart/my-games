@@ -89,8 +89,8 @@ class Main extends egret.DisplayObjectContainer {
     private endTarget:egret.Point=new egret.Point();
     private faceCards=[];
     private dealing:boolean=false;//是否正在发牌
-    private player1:Player=new Player();
-    private player2:Player=new Player();
+    private player1:Player;
+    private player2:Player;
 
     /**
      * 创建游戏场景
@@ -155,15 +155,16 @@ class Main extends egret.DisplayObjectContainer {
             }
         },this);
 
+        this.player1=new Player();
         this.addChild(this.player1);
-        this.player1.x=800;
-        this.player1.y=70;
+        this.player1.x=795;
+        this.player1.y=50;
     }
 
     private initGame(){
         this.initCards();
         this.cleardealCards();
-        this.endTarget.x=900;
+        this.endTarget.x=885;
         this.endTarget.y=50;
         this.faceCards=[];
     }
