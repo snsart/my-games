@@ -9,10 +9,17 @@
 		"libs/modules/promise/promise.js"
 	],
 	"game": [
-		"bin-debug/Card.js",
-		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
+		"bin-debug/Button.js",
+		"bin-debug/HeadImgs.js",
+		"bin-debug/HeadMc.js",
+		"bin-debug/Instruction.js",
+		"bin-debug/LoadingUI.js",
+		"bin-debug/Card.js",
+		"bin-debug/Menu.js",
+		"bin-debug/MenuManage.js",
 		"bin-debug/Platform.js",
-		"bin-debug/Player.js"
+		"bin-debug/Player.js",
+		"bin-debug/SpEffect.js"
 	]
 }

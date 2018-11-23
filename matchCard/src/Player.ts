@@ -1,16 +1,20 @@
 class Player extends egret.Sprite {
 	
 	private _cardnum:number=0;
+	private _headID:number=0;
 	private _headImg:egret.Bitmap;
 	private _focus:boolean=false;
 	private _bg:egret.Shape=new egret.Shape();
 	private _cardNumText:egret.TextField;
+	private _head:egret.Sprite;
+	private _headImgs:egret.Bitmap[]=[];
+	private _mask:egret.Shape;
+	private _cardPot:egret.Point=new egret.Point;
+	private _frameShape:egret.Shape=new egret.Shape();
 
 	public constructor() {
 		super();
-		this.headImg=this.createBitmapByName("headpic_json#h1");
-		this._headImg.width=60;
-		this._headImg.height=60;
+		this.createHeadImgs();
 		this.draw();
 	}
 
@@ -23,29 +27,78 @@ class Player extends egret.Sprite {
 		return this._cardnum;
 	}
 
-	public set headImg(value:egret.Bitmap){
-		this._headImg=value;
+	public set headID(value:number){
+		this._headID=value;
+		this._headImg=this._headImgs[value];
+		for(var i=0;i<this._headImgs.length;i++){
+			if(this._head.getChildIndex(this._headImgs[i])!=-1){
+				this._head.removeChild(this._headImgs[i]);
+			}
+		}
+		this._head.addChild(this._headImg);
+		this._headImg.mask=this._mask;
 	}
 
-	private set focus(value:boolean){
+	public get headID():number{
+		return this._headID;
+	}
+
+	public get head():egret.Sprite{
+		return this._head;
+	}
+
+	public set focus(value:boolean){
 		this._focus=value;
+		this.drawFrameShape();
+	}
+
+	public get cardPot():egret.Point{
+		return this._cardPot;
+	}
+
+	/*-----------------------------------------------------------------------------*/
+
+	private createHeadImgs(){
+		for(var i=0;i<4;i++){
+			let img=this.createBitmapByName("headpic_json#h"+(i+1));
+			img.width=60;
+			img.height=60;
+			img.x=-img.width/2;
+			img.y=-img.height/2;
+			img.mask=this._mask;
+			this._headImgs.push(img);
+		}
+		this._headImg=this._headImgs[this._headID];
 	}
 
 	private draw(){
+		this.addChild(this._frameShape);
+		this.drawFrameShape();
+
 		this.addChild(this._bg);
 		this.drawbg();
 		this.drawfooter();
 
-		let head=this.createHeadpic();
-		head.x=40;
-		head.y=235;
-		this.addChild(head);
+		this._head=this.createHeadpic();
+		this._head.x=40;
+		this._head.y=235;
+		this.addChild(this._head);
 
 		let cardinfo=this.createCardNumInfo();
 		cardinfo.x=90;
 		cardinfo.y=235;
 		this.addChild(cardinfo);
 		
+	}
+
+	private drawFrameShape(){
+		this._frameShape.graphics.clear();
+		if(this._focus){
+			this._frameShape.graphics.lineStyle(2,0xffff00);
+		}
+		this._frameShape.graphics.beginFill(0xffffff,0);
+		this._frameShape.graphics.drawRoundRect(-5,-5,190,305,20,20);
+		this._frameShape.graphics.endFill();
 	}
 
 	private drawbg(){
@@ -79,15 +132,15 @@ class Player extends egret.Sprite {
 		bg.graphics.endFill();
 		sprite.addChild(bg);
 
-		let mask:egret.Shape=new egret.Shape();
-		mask.graphics.beginFill(0x00a1b2);
-		mask.graphics.drawCircle(0,0,28);
-		mask.graphics.endFill();
-		sprite.addChild(mask);
+		this._mask=new egret.Shape();
+		this._mask.graphics.beginFill(0x00a1b2);
+		this._mask.graphics.drawCircle(0,0,28);
+		this._mask.graphics.endFill();
+		sprite.addChild(this._mask);
 
 		this._headImg.x=-this._headImg.width/2;
 		this._headImg.y=-this._headImg.height/2;
-		this._headImg.mask=mask;
+		this._headImg.mask=this._mask;
 		sprite.addChild(this._headImg);
 
 		let txtbg:egret.Shape=new egret.Shape();
@@ -111,17 +164,18 @@ class Player extends egret.Sprite {
 		let info:egret.Sprite=new egret.Sprite();
 		this._cardNumText=new egret.TextField();
 		this._cardNumText.text=String(54);
+		this._cardNumText.width=60;
 		this._cardNumText.size=50;
 		this._cardNumText.textAlign="center";
 		info.addChild(this._cardNumText);
 
-		this._cardNumText=new egret.TextField();
-		this._cardNumText.text="张";
-		this._cardNumText.size=20;
-		this._cardNumText.textAlign="center";
-		this._cardNumText.x=60;
-		this._cardNumText.y=20;
-		info.addChild(this._cardNumText);
+		let txtUnit=new egret.TextField();
+		txtUnit.text="张";
+		txtUnit.size=20;
+		txtUnit.textAlign="center";
+		txtUnit.x=60;
+		txtUnit.y=20;
+		info.addChild(txtUnit);
 		return info;
 	}
 

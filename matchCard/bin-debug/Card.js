@@ -56,6 +56,14 @@ var Card = (function (_super) {
         this._state = CardState.FACE;
         this.reverse();
     };
+    Card.prototype.reverse = function () {
+        if (this._state != CardState.REVERSING) {
+            this._stateBeforeReverse = this._state;
+            this._state = CardState.REVERSING;
+            egret.startTick(this.enterFrameHandler, this);
+        }
+    };
+    /*-------------------------------------------------------------------------------------------*/
     Card.prototype.draw = function () {
         var faceTxtr = RES.getRes(this._faceID);
         this._faceImg = new egret.Bitmap(faceTxtr);
@@ -67,13 +75,6 @@ var Card = (function (_super) {
         this._backImg.height = this.height;
         this.addChild(this._backImg);
         this._state = CardState.BACK;
-    };
-    Card.prototype.reverse = function () {
-        if (this._state != CardState.REVERSING) {
-            this._stateBeforeReverse = this._state;
-            this._state = CardState.REVERSING;
-            egret.startTick(this.enterFrameHandler, this);
-        }
     };
     Card.prototype.enterFrameHandler = function () {
         this.scaleX -= this._speed;

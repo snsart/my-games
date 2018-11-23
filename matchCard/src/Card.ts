@@ -44,6 +44,16 @@ class Card extends egret.Sprite{
 		this._state=CardState.FACE;
 		this.reverse();
 	}
+	
+	public reverse():void{
+		if(this._state!=CardState.REVERSING){
+			this._stateBeforeReverse=this._state;
+			this._state=CardState.REVERSING;
+			egret.startTick(this.enterFrameHandler,this);
+		}
+	}
+
+	/*-------------------------------------------------------------------------------------------*/
 
 	private draw():void{
 		let faceTxtr:egret.Texture = RES.getRes(this._faceID);
@@ -58,14 +68,6 @@ class Card extends egret.Sprite{
 
 		this.addChild(this._backImg);
 		this._state=CardState.BACK;
-	}
-
-	public reverse():void{
-		if(this._state!=CardState.REVERSING){
-			this._stateBeforeReverse=this._state;
-			this._state=CardState.REVERSING;
-			egret.startTick(this.enterFrameHandler,this);
-		}
 	}
 
 	private enterFrameHandler():boolean{

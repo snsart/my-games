@@ -91,6 +91,11 @@ class Main extends egret.DisplayObjectContainer {
     private dealing:boolean=false;//是否正在发牌
     private player1:Player;
     private player2:Player;
+    private currentPlayer:Player;
+    private menuManage:MenuManage;
+
+    private endEffect:SpEffect;
+    private replayBtn:egret.Bitmap;
 
     /**
      * 创建游戏场景
@@ -105,7 +110,9 @@ class Main extends egret.DisplayObjectContainer {
         this.setdealCards();
 
         this.initGame();
+        this.menuManage.open("intro",null);
          /*this.test();*/
+        /* this.test2();*/
     }
 
     private test(){
@@ -115,7 +122,14 @@ class Main extends egret.DisplayObjectContainer {
             this.cards[i].y=50+i*5;
             this.setChildIndex(this.cards[i],i+20);
         }
-        this.gameOver();
+        this.replayGame();
+    }
+
+    private test2(){     
+        this.addChild(this.endEffect);
+        this.endEffect.x=400;
+        this.endEffect.y=500;
+        this.endEffect.startPlay();
     }
 
     private addGameBackground(){
@@ -130,6 +144,10 @@ class Main extends egret.DisplayObjectContainer {
         gamebg.x=250;
         gamebg.y=50;
         this.addChild(gamebg);
+
+        let title:egret.Bitmap=this.createBitmapByName("title");
+        this.addChild(title);
+
     }
 
     private addGameUI(){
@@ -155,18 +173,72 @@ class Main extends egret.DisplayObjectContainer {
             }
         },this);
 
+        let helpBtn:egret.Bitmap=this.createBitmapByName("helpBtn");
+		helpBtn.x=10;
+		helpBtn.y=720;
+        helpBtn.width=30;
+        helpBtn.height=30;
+		this.addChild(helpBtn);
+		helpBtn.touchEnabled=true;
+		helpBtn.addEventListener(egret.TouchEvent.TOUCH_BEGIN,function(){
+			 this.menuManage.open("intro",null);
+		},this)
+
+        this.replayBtn=this.createBitmapByName("replayBtn");
+		this.replayBtn.x=850;
+		this.replayBtn.y=715;
+        this.replayBtn.width=70;
+		this.replayBtn.height=25;
+		this.addChild(this.replayBtn);
+		this.replayBtn.touchEnabled=true;
+        this.replayBtn.visible=false;
+		this.replayBtn.addEventListener(egret.TouchEvent.TOUCH_BEGIN,function(){
+			this.endEffect.stop();
+            this.replayGame();
+		},this)
+
+
         this.player1=new Player();
         this.addChild(this.player1);
         this.player1.x=795;
         this.player1.y=50;
+        this.player1.headID=0;
+        this.player1.cardPot.x=885;
+        this.player1.cardPot.y=60;
+        this.player1.head.touchEnabled=true;
+        this.player1.head.addEventListener(egret.TouchEvent.TOUCH_BEGIN,function(){
+            this.menuManage.open("headImgs",this.player1);
+        },this);
+
+        this.player2=new Player();
+        this.addChild(this.player2);
+        this.player2.x=795;
+        this.player2.y=390;
+        this.player2.headID=1;
+        this.player2.cardPot.x=885;
+        this.player2.cardPot.y=400;
+        this.player2.head.touchEnabled=true;
+        this.player2.head.addEventListener(egret.TouchEvent.TOUCH_BEGIN,function(){
+            this.menuManage.open("headImgs",this.player2);
+        },this);
+
+        //创建特效
+        this.endEffect=new SpEffect();
+
     }
 
     private initGame(){
         this.initCards();
         this.cleardealCards();
-        this.endTarget.x=885;
-        this.endTarget.y=50;
+        this.player1.focus=false;
+        this.player2.focus=false;
+        this.player1.cardNum=0;
+        this.player2.cardNum=0;
+        this.currentPlayer=this.player1;
+        this.currentPlayer.focus=true;
+        this.endTarget=this.currentPlayer.cardPot;
         this.faceCards=[];
+        this.menuManage=MenuManage.getInstance(this.stage);
     }
 
     private createCards(){
@@ -268,6 +340,14 @@ class Main extends egret.DisplayObjectContainer {
             this.selectedCards[0].reverse();
             this.selectedCards[1].reverse();
             this.selectedCards=[];
+            this.currentPlayer.focus=false;
+            if(this.currentPlayer==this.player1){
+                this.currentPlayer=this.player2;
+            }else{
+                this.currentPlayer=this.player1;
+            }
+            this.currentPlayer.focus=true;
+            this.endTarget=this.currentPlayer.cardPot;
         },this,1000);
     }
 
@@ -275,7 +355,7 @@ class Main extends egret.DisplayObjectContainer {
         egret.setTimeout(function(){
             let card1=this.selectedCards[0];
             let card2=this.selectedCards[1];
-            this.endTarget.y+=10;
+            
             egret.Tween.get(card1).to({x:this.endTarget.x,y:this.endTarget.y},200);
             egret.Tween.get(card2).to({x:this.endTarget.x,y:this.endTarget.y},200);
             let nullPot1=this.cardsPos[this.dealCards.indexOf(card1)];
@@ -288,6 +368,7 @@ class Main extends egret.DisplayObjectContainer {
             this.setChildIndex(card2,this.faceCards.length+55);
 
             egret.setTimeout(function(){
+                this.currentPlayer.cardNum+=2;
                 if(this.leaveCards>0){
                    this.deal(2,[nullPot1,nullPot2]);
                 }
@@ -301,6 +382,19 @@ class Main extends egret.DisplayObjectContainer {
     }
 
     private gameOver(){
+        this.player1.focus=false;
+        this.player2.focus=false;
+        let winPlayer:Player=this.player1.cardNum>this.player2.cardNum?this.player1:this.player2;
+        winPlayer.focus=true;
+        this.addChild(this.endEffect);
+        this.endEffect.x=winPlayer.cardPot.x;
+        this.endEffect.y=winPlayer.cardPot.y+80;
+        this.endEffect.startPlay();
+        this.replayBtn.visible=true;
+    }
+
+    private replayGame(){
+        this.replayBtn.visible=false;
         for(let i=0;i<this.faceCards.length;i++){
             egret.setTimeout(function(){
                 let card=this.faceCards.pop();

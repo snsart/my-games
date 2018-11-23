@@ -1,49 +1,60 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,egret_icon_png,description_json,cards_json,btns,headpic_json,btnskin_png",
+			"keys": "bg_jpg,egret_icon_png,description_json,cards_json,btns,headpic_json,btnskin_png,intro_json,title_json",
 			"name": "preload"
 		}
 	],
-
 	"resources": [
 		{
-			"name": "bg_jpg",
+			"url": "assets/bg.jpg",
 			"type": "image",
-			"url": "assets/bg.jpg"
+			"name": "bg_jpg"
 		},
 		{
-			"name": "egret_icon_png",
+			"url": "assets/egret_icon.png",
 			"type": "image",
-			"url": "assets/egret_icon.png"
+			"name": "egret_icon_png"
 		},
 		{
-			"name": "description_json",
+			"url": "config/description.json",
 			"type": "json",
-			"url": "config/description.json"
+			"name": "description_json"
 		},
 		{
-			"name": "cards_json",
-			"type": "sheet",
 			"url": "assets/cards.json",
+			"type": "sheet",
+			"name": "cards_json",
 			"subkeys": "a1,a10,a11,a12,a13,a2,a3,a4,a5,a6,a7,a8,a9,b1,b10,b11,b12,b13,b2,b3,b4,b5,b6,b7,b8,b9,back,c1,c10,c11,c12,c13,c2,c3,c4,c5,c6,c7,c8,c9,d1,d10,d11,d12,d13,d2,d3,d4,d5,d6,d7,d8,d9,e1,e2"
 		},
 		{
-			"name": "btns",
-			"type": "sheet",
 			"url": "assets/btns.json",
+			"type": "sheet",
+			"name": "btns",
 			"subkeys": "startBtn,updateBtn"
 		},
 		{
-			"name": "headpic_json",
-			"type": "sheet",
 			"url": "assets/headpic.json",
+			"type": "sheet",
+			"name": "headpic_json",
 			"subkeys": "h1,h2,h3,h4"
 		},
 		{
-			"name": "btnskin_png",
+			"url": "assets/btnskin.png",
 			"type": "image",
-			"url": "assets/btnskin.png"
+			"name": "btnskin_png"
+		},
+		{
+			"url": "assets/intro.json",
+			"type": "sheet",
+			"name": "intro_json",
+			"subkeys": "helpBtn,intro,introCloseBtn"
+		},
+		{
+			"name": "title_json",
+			"type": "sheet",
+			"url": "assets/title.json",
+			"subkeys": "replayBtn,title,tx1,tx2,tx3,tx4"
 		}
 	]
 }
