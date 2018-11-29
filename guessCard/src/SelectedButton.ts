@@ -14,11 +14,11 @@ class SelectedButton extends egret.Sprite {
 		if(value){
 			this._selectedImg.visible=true;
 			this._unselectedImg.visible=false;
-			this.drawRoundRect(true);
+			this.drawSelectedBg(true);
 		}else{
 			this._selectedImg.visible=false;
 			this._unselectedImg.visible=true;
-			this.drawRoundRect(false);
+			this.drawSelectedBg(false);
 		}
 	}
 
@@ -28,26 +28,35 @@ class SelectedButton extends egret.Sprite {
 
 	private createView(): void {
 
+		this._selectedBg=new egret.Shape();
+		this.drawSelectedBg(false);
+		this.addChild(this._selectedBg);
+
         this._unselectedImg=this.createBitmapByName("button#unselect");
 		this.addChild(this._unselectedImg);
+		this._unselectedImg.width=30;
+		this._unselectedImg.height=30;
+		this._unselectedImg.x=-15;
+		this._unselectedImg.y=-15;
 		this._selectedImg=this.createBitmapByName("button#select");	
 		this.addChild(this._selectedImg);
+		this._selectedImg.width=30;
+		this._selectedImg.height=30;
+		this._selectedImg.x=-15;
+		this._selectedImg.y=-15;
 		this._selectedImg.visible=false;
 		this._unselectedImg.visible=true;
-
-		this._selectedBg=new egret.Shape();
-		this.drawRoundRect(false);
-		this.addChild(this._selectedBg);
+	
     }
 
-	private drawRoundRect(line:boolean){
+	private drawSelectedBg(line:boolean){
 		this._selectedBg.graphics.clear();
 		if(line){
 			this._selectedBg.graphics.lineStyle(1,0xffff00);
 		}
 		/*0f2642*/
 		this._selectedBg.graphics.beginFill(0xffffff,0.1);
-		this._selectedBg.graphics.drawRoundRect(-85,-560,185,560,30,30);
+		this._selectedBg.graphics.drawRoundRect(-100,-600,200,600,30,30);
 		this._selectedBg.graphics.endFill();
 	}
 

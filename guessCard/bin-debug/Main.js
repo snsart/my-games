@@ -79,6 +79,8 @@ var Main = (function (_super) {
         _this.cardsPos = [];
         _this.cardsInitPos = [];
         _this.isdeal = false;
+        _this.dealTimes = 0;
+        _this.selectedCards = [];
         _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.onAddToStage, _this);
         return _this;
     }
@@ -153,6 +155,7 @@ var Main = (function (_super) {
      * Create a game scene
      */
     Main.prototype.createGameScene = function () {
+        this.addGameBackground();
         this.setCards();
         this.setCardsPos();
         this.setCardsInitPos();
@@ -162,22 +165,47 @@ var Main = (function (_super) {
             card.y = this.cardsInitPos[i].y;
             this.addChild(card);
         }
-        var dealBtn = this.createBitmapByName("button#deal");
+        this.addGameUI();
+    };
+    Main.prototype.addGameUI = function () {
+        var dealBtn = this.createBitmapByName("dealBtn");
         this.addChild(dealBtn);
         dealBtn.touchEnabled = true;
         dealBtn.x = this.stage.stageWidth / 2 + 130;
         dealBtn.y = this.stage.stageHeight - 80;
         dealBtn.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.dealHandler, this);
-        var acceptBtn = this.createBitmapByName("button#accept");
+        var acceptBtn = this.createBitmapByName("acceptBtn");
         this.addChild(acceptBtn);
         acceptBtn.touchEnabled = true;
-        acceptBtn.x = this.stage.stageWidth / 2 + 310;
+        acceptBtn.x = this.stage.stageWidth / 2 + 230;
         acceptBtn.y = this.stage.stageHeight - 80;
         acceptBtn.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.acceptHandler, this);
+        var updateBtn = this.createBitmapByName("updateBtn");
+        this.addChild(updateBtn);
+        updateBtn.touchEnabled = true;
+        updateBtn.x = this.stage.stageWidth / 2 + 330;
+        updateBtn.y = this.stage.stageHeight - 80;
+        updateBtn.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.updateHandler, this);
         this.selectUI = new SelectListUI();
         this.addChild(this.selectUI);
-        this.selectUI.x = 330;
-        this.selectUI.y = 600;
+        this.selectUI.addEventListener("select", this.selectedHandler, this);
+        this.selectUI.x = 394;
+        this.selectUI.y = 640;
+        this.dealTimesInfo = new egret.TextField();
+        this.dealTimesInfo.x = 80;
+        this.dealTimesInfo.y = 360;
+        this.dealTimesInfo.textColor = 0xffff00;
+        this.dealTimesInfo.size = 30;
+        this.dealTimesInfo.text = "第" + this.dealTimes + "次发牌";
+        this.addChild(this.dealTimesInfo);
+        this.selectedText = new egret.TextField();
+        this.selectedText.x = 75;
+        this.selectedText.y = 610;
+        this.selectedText.textColor = 0xffff00;
+        this.selectedText.size = 30;
+        this.selectedText.text = "你选择的牌";
+        this.addChild(this.selectedText);
+        this.selectedText.visible = false;
         this.tips = new egret.TextField();
         this.tips.x = 50;
         this.tips.y = 680;
@@ -185,21 +213,91 @@ var Main = (function (_super) {
         this.tips.size = 40;
         this.addChild(this.tips);
     };
+    Main.prototype.addGameBackground = function () {
+        var bg = new egret.Shape();
+        bg.graphics.beginFill(0x284976);
+        bg.graphics.drawRect(0, 0, this.stage.stageWidth, this.stage.stageHeight);
+        this.addChild(bg);
+        var cardsbg = new egret.Shape();
+        cardsbg.graphics.beginFill(0xffffff, 0.1);
+        cardsbg.graphics.drawRect(0, 0, 200, 310);
+        this.addChild(cardsbg);
+        cardsbg.x = 50;
+        cardsbg.y = 40;
+    };
+    Main.prototype.updateHandler = function () {
+        this.shuffer(this.cards);
+        for (var i = 0; i < 15; i++) {
+            this.cards[i].x = this.cardsInitPos[i].x;
+            this.cards[i].y = this.cardsInitPos[i].y;
+            this.setChildIndex(this.cards[i], i + 15);
+        }
+        this.dealTimes = 0;
+        this.dealTimesInfo.text = "第" + this.dealTimes + "次发牌";
+        this.selectedText.visible = false;
+        this.isdeal = false;
+    };
     Main.prototype.dealHandler = function (e) {
-        this.moveCard(this.cards[14]);
+        if (this.isdeal) {
+            return;
+        }
+        this.dealTimes++;
+        this.dealTimesInfo.text = "第" + this.dealTimes + "次发牌";
+        this.startDealCard();
         this.selectUI.init();
         this.isdeal = true;
     };
-    Main.prototype.moveCard = function (card) {
-        var index = this.cards.indexOf(card);
-        var target = this.cardsPos[index];
-        egret.Tween.get(card).to({ x: target.x, y: target.y }, 100).call(function (index, card) {
-            this.setChildIndex(card, 15 - index);
-            if (index < 1) {
-                return;
+    Main.prototype.startDealCard = function () {
+        //let index=this.cards.indexOf(card);
+        var _loop_1 = function (i) {
+            egret.setTimeout(function () {
+                var card = this.cards[i];
+                var target = this.cardsPos[i];
+                egret.Tween.get(card).to({ x: target.x, y: target.y }, 100).call(function () {
+                    this.setChildIndex(card, 15 - i);
+                }, this);
+            }, this_1, 1400 - i * 100);
+        };
+        var this_1 = this;
+        for (var i = 0; i < this.cards.length; i++) {
+            _loop_1(i);
+        }
+        /* egret.Tween.get(card).to({x:target.x,y:target.y},100).call(function(index:number,card:egret.Bitmap){
+             this.setChildIndex(card,15-index);
+             if(index<1){
+                  return;
+             }
+             this.startDealCard(this.cards[index-1]);
+         },this,[index,card]);*/
+    };
+    Main.prototype.selectedHandler = function () {
+        if (this.dealTimes == 3) {
+            var sort = void 0;
+            switch (this.selectUI.selectId) {
+                case 0:
+                    this.showTips("提示：请选择你的牌所在的列！");
+                    return;
+                case 1:
+                    sort = [13, 10, 7, 4, 1, 14, 11, 8, 5, 2, 12, 9, 6, 3, 0];
+                    break;
+                case 2:
+                    sort = [14, 11, 8, 5, 2, 13, 10, 7, 4, 1, 12, 9, 6, 3, 0];
+                    break;
+                case 3:
+                    sort = [14, 11, 8, 5, 2, 12, 9, 6, 3, 0, 13, 10, 7, 4, 1];
+                    break;
             }
-            this.moveCard(this.cards[index - 1]);
-        }, this, [index, card]);
+            var currentSelected = [];
+            for (var i = 5; i < 10; i++) {
+                currentSelected.push(this.cards[sort[i]]);
+            }
+            var selectedCard = currentSelected[2];
+            var target = new egret.Point(75, 400);
+            this.setChildIndex(selectedCard, 100);
+            egret.Tween.get(selectedCard).to({ x: target.x, y: target.y, rotation: 360 }, 1000).call(function () {
+                this.selectedText.visible = true;
+            }, this);
+        }
     };
     Main.prototype.acceptHandler = function (e) {
         if (!this.isdeal) {
@@ -224,36 +322,35 @@ var Main = (function (_super) {
         var cards = [];
         for (var i = 0; i < 15; i++) {
             var card = this.cards[sort[i]];
-            this.setChildIndex(card, i);
+            this.setChildIndex(card, i + 5);
             cards.push(card);
         }
         this.cards = cards;
-        var _loop_1 = function (i) {
-            var target = this_1.cardsInitPos[i];
+        var _loop_2 = function (i) {
             egret.setTimeout(function () {
+                var target = this.cardsInitPos[i];
                 this.setChildIndex(this.cards[i], i + 15);
-                egret.Tween.get(this.cards[i]).to({ x: target.x, y: target.y }, 250).call(function () {
-                    this.setChildIndex(this.cards[i], i);
-                }, this);
-            }, this_1, Math.floor(i / 5) * 300);
+                egret.Tween.get(this.cards[i]).to({ x: target.x, y: target.y }, 250);
+            }, this_2, Math.floor(i / 5) * 300);
         };
-        var this_1 = this;
-        for (var i = 0; i < 15; i++) {
-            _loop_1(i);
+        var this_2 = this;
+        for (var i = 0; i < this.cards.length; i++) {
+            _loop_2(i);
         }
         this.selectUI.init();
         this.isdeal = false;
+        this.selectedText.visible = false;
     };
     Main.prototype.setCardsPos = function () {
         for (var i = 0; i < 5; i++) {
             for (var j = 0; j < 3; j++) {
-                this.cardsPos.push(new egret.Point(750 - j * 250, 330 - i * 70));
+                this.cardsPos.push(new egret.Point(800 - j * 240, 380 - i * 80));
             }
         }
     };
     Main.prototype.setCardsInitPos = function () {
         for (var i = 0; i < 15; i++) {
-            this.cardsInitPos.push(new egret.Point(55, 30 + i * 5));
+            this.cardsInitPos.push(new egret.Point(75, 60 + i * 5));
         }
     };
     Main.prototype.setCards = function () {
@@ -268,6 +365,8 @@ var Main = (function (_super) {
             }
             names.push(name_1);
             var card = this.createBitmapByName("cards#" + name_1);
+            card.width = 150;
+            card.height = 200;
             this.cards.push(card);
         }
     };
@@ -286,6 +385,14 @@ var Main = (function (_super) {
         var texture = RES.getRes(name);
         result.texture = texture;
         return result;
+    };
+    Main.prototype.shuffer = function (arr) {
+        for (var i = 0, len = arr.length; i < len; i++) {
+            var currentRandom = Math.floor(Math.random() * len);
+            var current = arr[i];
+            arr[i] = arr[currentRandom];
+            arr[currentRandom] = current;
+        }
     };
     return Main;
 }(egret.DisplayObjectContainer));

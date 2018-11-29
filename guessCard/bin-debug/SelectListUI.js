@@ -34,7 +34,7 @@ var SelectListUI = (function (_super) {
         for (var i = 0; i < 3; i++) {
             var selectBtn = new SelectedButton();
             this.addChild(selectBtn);
-            selectBtn.x = i * 250;
+            selectBtn.x = i * 240;
             selectBtn.touchEnabled = true;
             this._selectBtnList.push(selectBtn);
             selectBtn.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.clickHandler, this);
@@ -49,6 +49,7 @@ var SelectListUI = (function (_super) {
                 this._selectBtnList[i].select = false;
             }
         }
+        this.dispatchEvent(new egret.Event("select"));
     };
     return SelectListUI;
 }(egret.Sprite));

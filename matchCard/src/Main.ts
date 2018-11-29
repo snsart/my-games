@@ -58,8 +58,6 @@ class Main extends egret.DisplayObjectContainer {
             console.log(e);
         })
 
-
-
     }
 
     private async runGame() {

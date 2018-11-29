@@ -24,7 +24,7 @@ class SelectListUI extends egret.Sprite {
         for(var i=0;i<3;i++){
             let selectBtn:SelectedButton=new SelectedButton();
             this.addChild(selectBtn);
-            selectBtn.x=i*250;
+            selectBtn.x=i*240;
 			selectBtn.touchEnabled=true;
 			this._selectBtnList.push(selectBtn);
 			selectBtn.addEventListener(egret.TouchEvent.TOUCH_BEGIN,this.clickHandler,this);
@@ -40,9 +40,7 @@ class SelectListUI extends egret.Sprite {
 				this._selectBtnList[i].select=false;
 			} 
 		}
+		this.dispatchEvent(new egret.Event("select"));
 	}
-
-
-
 
 }

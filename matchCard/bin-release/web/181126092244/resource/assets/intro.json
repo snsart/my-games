@@ -1,0 +1,39 @@
+{
+
+"file": "intro.png",
+
+"frames": {
+
+"helpBtn":
+{
+	"x":0,"y":0,"w":63,"h":64,
+	"offX":0,
+    "offY":0,
+    "sourceW":63,
+    "sourceH":64
+},
+"intro":
+{
+	"x":63,"y":0,"w":1038,"h":400,
+	"offX":0,
+    "offY":0,
+    "sourceW":1038,
+    "sourceH":400
+},
+"introCloseBtn":
+{
+	"x":1101,"y":0,"w":123,"h":38,
+	"offX":0,
+    "offY":0,
+    "sourceW":123,
+    "sourceH":38
+}},
+"meta": {
+	"app": "Adobe Flash Professional",
+	"version": "15.0.0.173",
+	"image": "intro.png",
+	"format": "RGBA8888",
+	"size": {"w":2048,"h":2048},
+	"scale": "1"
+}
+}
