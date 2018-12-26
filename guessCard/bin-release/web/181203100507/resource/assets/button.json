@@ -1,0 +1,47 @@
+{
+
+"file": "button.png",
+
+"frames": {
+
+"select":
+{
+	"x":0,"y":0,"w":22,"h":22,
+	"offX":0,
+    "offY":0,
+    "sourceW":22,
+    "sourceH":22
+},
+"unselect":
+{
+	"x":22,"y":0,"w":22,"h":22,
+	"offX":0,
+    "offY":0,
+    "sourceW":22,
+    "sourceH":22
+},
+"deal":
+{
+	"x":0,"y":22,"w":105,"h":51,
+	"offX":0,
+    "offY":0,
+    "sourceW":105,
+    "sourceH":51
+},
+"accept":
+{
+	"x":0,"y":73,"w":105,"h":51,
+	"offX":0,
+    "offY":0,
+    "sourceW":105,
+    "sourceH":51
+}},
+"meta": {
+	"app": "Adobe Flash Professional",
+	"version": "15.0.0.173",
+	"image": "button.png",
+	"format": "RGBA8888",
+	"size": {"w":128,"h":128},
+	"scale": "1"
+}
+}

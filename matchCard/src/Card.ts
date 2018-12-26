@@ -47,6 +47,8 @@ class Card extends egret.Sprite{
 	
 	public reverse():void{
 		if(this._state!=CardState.REVERSING){
+			var sound:egret.Sound = RES.getRes("clicksnd_mp3");
+            sound.play(0,1);
 			this._stateBeforeReverse=this._state;
 			this._state=CardState.REVERSING;
 			egret.startTick(this.enterFrameHandler,this);

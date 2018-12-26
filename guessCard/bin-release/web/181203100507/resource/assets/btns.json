@@ -1,0 +1,38 @@
+{
+"file": "btns.png",
+
+"frames": {
+
+"updateBtn":
+{
+	"x":0,"y":0,"w":70,"h":28,
+	"offX":0,
+    "offY":0,
+    "sourceW":70,
+    "sourceH":28
+},
+"dealBtn":
+{
+	"x":0,"y":28,"w":70,"h":28,
+	"offX":0,
+    "offY":0,
+    "sourceW":70,
+    "sourceH":28
+},
+"acceptBtn":
+{
+	"x":0,"y":56,"w":70,"h":28,
+	"offX":0,
+    "offY":0,
+    "sourceW":70,
+    "sourceH":28
+}},
+"meta": {
+	"app": "Adobe Flash Professional",
+	"version": "15.0.0.173",
+	"image": "btns.png",
+	"format": "RGBA8888",
+	"size": {"w":128,"h":128},
+	"scale": "1"
+}
+}

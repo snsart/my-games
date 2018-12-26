@@ -334,6 +334,7 @@ class Main extends egret.DisplayObjectContainer {
     }
 
     private wrong(){
+        
         egret.setTimeout(function(){
             this.selectedCards[0].reverse();
             this.selectedCards[1].reverse();
@@ -351,6 +352,9 @@ class Main extends egret.DisplayObjectContainer {
 
     private right(){
         egret.setTimeout(function(){
+            var sound:egret.Sound = RES.getRes("right_snd");
+            sound.play(0,1);
+
             let card1=this.selectedCards[0];
             let card2=this.selectedCards[1];
             

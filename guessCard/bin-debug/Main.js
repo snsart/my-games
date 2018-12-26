@@ -236,6 +236,7 @@ var Main = (function (_super) {
         this.dealTimesInfo.text = "第" + this.dealTimes + "次发牌";
         this.selectedText.visible = false;
         this.isdeal = false;
+        this.selectUI.init();
     };
     Main.prototype.dealHandler = function (e) {
         if (this.isdeal) {
@@ -248,7 +249,6 @@ var Main = (function (_super) {
         this.isdeal = true;
     };
     Main.prototype.startDealCard = function () {
-        //let index=this.cards.indexOf(card);
         var _loop_1 = function (i) {
             egret.setTimeout(function () {
                 var card = this.cards[i];
@@ -262,13 +262,6 @@ var Main = (function (_super) {
         for (var i = 0; i < this.cards.length; i++) {
             _loop_1(i);
         }
-        /* egret.Tween.get(card).to({x:target.x,y:target.y},100).call(function(index:number,card:egret.Bitmap){
-             this.setChildIndex(card,15-index);
-             if(index<1){
-                  return;
-             }
-             this.startDealCard(this.cards[index-1]);
-         },this,[index,card]);*/
     };
     Main.prototype.selectedHandler = function () {
         if (this.dealTimes == 3) {

@@ -196,6 +196,7 @@ class Main extends egret.DisplayObjectContainer {
         this.dealTimesInfo.text="第"+this.dealTimes+"次发牌";
         this.selectedText.visible=false;
         this.isdeal=false;
+        this.selectUI.init(); 
     }
 
     private dealHandler(e){
@@ -304,7 +305,7 @@ class Main extends egret.DisplayObjectContainer {
         }
     }
 
-     private setCardsInitPos(){
+    private setCardsInitPos(){
         for(let i=0;i<15;i++){  
             this.cardsInitPos.push(new egret.Point(75,60+i*5));
         }
@@ -354,6 +355,5 @@ class Main extends egret.DisplayObjectContainer {
             arr[currentRandom] = current;
         }
     }
-   
-    
+     
 }

@@ -369,6 +369,8 @@ var Main = (function (_super) {
     };
     Main.prototype.right = function () {
         egret.setTimeout(function () {
+            var sound = RES.getRes("right_snd");
+            sound.play(0, 1);
             var card1 = this.selectedCards[0];
             var card2 = this.selectedCards[1];
             egret.Tween.get(card1).to({ x: this.endTarget.x, y: this.endTarget.y }, 200);

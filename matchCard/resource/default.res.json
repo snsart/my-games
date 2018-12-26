@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,egret_icon_png,description_json,cards_json,btns,headpic_json,btnskin_png,intro_json,title_json",
+			"keys": "bg_jpg,egret_icon_png,description_json,cards_json,btns,headpic_json,btnskin_png,intro_json,title_json,right_snd,wrong_snd,clicksnd_mp3",
 			"name": "preload"
 		}
 	],
@@ -55,6 +55,21 @@
 			"type": "sheet",
 			"url": "assets/title.json",
 			"subkeys": "replayBtn,title,tx1,tx2,tx3,tx4"
+		},
+		{
+			"name": "right_snd",
+			"type": "sound",
+			"url": "assets/rightsnd.mp3"
+		},
+		{
+			"name": "wrong_snd",
+			"type": "sound",
+			"url": "assets/wrongsnd.mp3"
+		},
+		{
+			"name": "clicksnd_mp3",
+			"type": "sound",
+			"url": "assets/clicksnd.mp3"
 		}
 	]
 }
