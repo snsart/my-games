@@ -11,10 +11,11 @@
 	"game": [
 		"bin-debug/Main.js",
 		"bin-debug/Button.js",
+		"bin-debug/HeadImgs.js",
 		"bin-debug/HeadMc.js",
 		"bin-debug/Instruction.js",
 		"bin-debug/LoadingUI.js",
-		"bin-debug/HeadImgs.js",
+		"bin-debug/Card.js",
 		"bin-debug/Menu.js",
 		"bin-debug/MenuManage.js",
 		"bin-debug/Platform.js",
