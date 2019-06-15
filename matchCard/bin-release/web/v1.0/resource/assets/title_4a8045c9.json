@@ -1,0 +1,63 @@
+﻿{
+"file": "title_547762ca.png",
+
+"frames": {
+
+"replayBtn":
+{
+	"x":0,"y":0,"w":100,"h":38,
+	"offX":0,
+    "offY":0,
+    "sourceW":100,
+    "sourceH":38
+},
+"title":
+{
+	"x":0,"y":38,"w":185,"h":34,
+	"offX":0,
+    "offY":0,
+    "sourceW":185,
+    "sourceH":34
+},
+"tx1":
+{
+	"x":185,"y":38,"w":23,"h":25,
+	"offX":0,
+    "offY":0,
+    "sourceW":23,
+    "sourceH":25
+},
+"tx2":
+{
+	"x":208,"y":38,"w":25,"h":25,
+	"offX":0,
+    "offY":0,
+    "sourceW":25,
+    "sourceH":25
+},
+"tx3":
+{
+	"x":233,"y":38,"w":18,"h":25,
+	"offX":0,
+    "offY":0,
+    "sourceW":18,
+    "sourceH":25
+},
+"tx4":
+{
+	"x":0,"y":72,"w":20,"h":25,
+	"offX":0,
+    "offY":0,
+    "sourceW":20,
+    "sourceH":25
+}},
+
+"meta": {
+	"app": "Adobe Flash Professional",
+	"version": "15.0.0.173",
+	"image": "title_547762ca.png",
+	"format": "RGBA8888",
+	"size": {"w":256,"h":256},
+	"scale": "1"
+}
+}

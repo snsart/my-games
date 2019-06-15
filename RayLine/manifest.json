@@ -8,8 +8,13 @@
 		"libs/modules/promise/promise.js"
 	],
 	"game": [
+		"bin-debug/ActDisplayObject.js",
+		"bin-debug/LaserPen.js",
+		"bin-debug/Line.js",
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
-		"bin-debug/Platform.js"
+		"bin-debug/ObjectDecorator.js",
+		"bin-debug/Platform.js",
+		"bin-debug/RayLine.js"
 	]
 }

@@ -92,8 +92,14 @@ class Main extends egret.DisplayObjectContainer {
      * Create a game scene
      */
     private createGameScene() {
-        
-       
+        let pen=this.createBitmapByName("pen_png");
+        this.addChild(pen);
+        ObjectDecorator.get(pen).addDragAction(this.stage).upHandler(function(){
+            console.log("up1");
+        }).moveHandler(function(){
+            console.log("move1");
+        });
+
     }
 
     /**
