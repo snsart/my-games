@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,egret_icon_png,description_json,pen_png,rotate_png",
+			"keys": "bg_jpg,egret_icon_png,description_json,pen_png,rotate_png,mirror_png",
 			"name": "preload"
 		}
 	],
@@ -30,6 +30,11 @@
 			"name": "rotate_png",
 			"type": "image",
 			"url": "assets/rotate.png"
+		},
+		{
+			"name": "mirror_png",
+			"type": "image",
+			"url": "assets/mirror.png"
 		}
 	]
 }

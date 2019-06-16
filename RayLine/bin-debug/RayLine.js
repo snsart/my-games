@@ -18,6 +18,9 @@ var RayLine = (function () {
         get: function () {
             return this._direction;
         },
+        set: function (value) {
+            this._direction = value;
+        },
         enumerable: true,
         configurable: true
     });

@@ -14,7 +14,7 @@ class Line {
     }
 
 	public get endPoint():egret.Point{
-        return this._startPoint;
+        return this._endPoint;
     }
 
 	public get reflect():boolean{

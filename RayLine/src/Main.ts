@@ -92,21 +92,34 @@ class Main extends egret.DisplayObjectContainer {
      * Create a game scene
      */
     private createGameScene() {
-        let pen=this.createBitmapByName("pen_png");
-        this.addChild(pen);
-        pen.x=100;
-        pen.y=100;
-        ObjectDecorator.get(pen).addDragAction(this.stage).upHandler(function(){
-            console.log("up1");
-        }).moveHandler(function(){
-            console.log("move1");
-        });
+        let bg=new egret.Shape();
+        bg.graphics.beginFill(0x000000);
+        bg.graphics.drawRect(0,0,this.stage.stageWidth,this.stage.stageHeight);
+        this.addChild(bg);
 
-        let rotate=this.createBitmapByName("rotate_png");
-        rotate.anchorOffsetX=rotate.width/2;
-        rotate.anchorOffsetY=rotate.height/2
-        this.addChild(rotate);
-        ObjectDecorator.get(pen).addRotateAction(this.stage,rotate,70,-90);
+        let pen=new LaserPen(this.stage);
+        this.addChild(pen);
+
+        let mirror=new Mirror(this.stage);
+        mirror.x=200;
+        mirror.y=400;
+        this.addChild(mirror);
+        pen.addMirror(mirror.line);
+
+        mirror.addEventListener(Mirror.POSITION_CHANGE,function(){
+            pen.update();
+        },this);
+
+        let mirror2=new Mirror(this.stage);
+        mirror2.x=600;
+        mirror2.y=500;
+        this.addChild(mirror2);
+        pen.addMirror(mirror2.line);
+
+        mirror2.addEventListener(Mirror.POSITION_CHANGE,function(){
+            pen.update();
+        },this);
+        pen.update();
     }
 
     /**

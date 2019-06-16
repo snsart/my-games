@@ -18,6 +18,10 @@ class RayLine{
         return this._direction;
     }
 
+    public set direction(value:number){
+        this._direction=value;
+    }
+
     /*
     获得射线上距离起始点为len处的点的坐标;
     */

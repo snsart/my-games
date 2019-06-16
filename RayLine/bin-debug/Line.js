@@ -17,7 +17,7 @@ var Line = (function () {
     });
     Object.defineProperty(Line.prototype, "endPoint", {
         get: function () {
-            return this._startPoint;
+            return this._endPoint;
         },
         enumerable: true,
         configurable: true

@@ -52,6 +52,7 @@ var ObjectDecorator = (function (_super) {
         ObjectDecorator.updateRotateHandlePosition();
         handle.touchEnabled = true;
         ObjectDecorator.currentObj.handle.addEventListener(egret.TouchEvent.TOUCH_BEGIN, ObjectDecorator.rotateBeginHandler, this);
+        return ObjectDecorator;
     };
     ObjectDecorator.upHandler = function (call) {
         ObjectDecorator.currentObj.mouseup = call;
@@ -151,7 +152,6 @@ var ObjectDecorator = (function (_super) {
         ObjectDecorator.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, ObjectDecorator.stageTouchMoveHandler, this);
     };
     ObjectDecorator.updateRotateHandlePosition = function () {
-        console.log(ObjectDecorator.currentObj);
         if (ObjectDecorator.currentObj.handle != null) {
             var distance = ObjectDecorator.currentObj.distance;
             var rotation = ObjectDecorator.currentObj.angle + ObjectDecorator.currentObj.obj.rotation;

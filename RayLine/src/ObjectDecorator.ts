@@ -57,6 +57,7 @@ class ObjectDecorator extends egret.DisplayObject {
 
 		handle.touchEnabled=true;
 		ObjectDecorator.currentObj.handle.addEventListener(egret.TouchEvent.TOUCH_BEGIN,ObjectDecorator.rotateBeginHandler,this);
+		return ObjectDecorator;
 	}
 
 	public static upHandler(call:Function){
@@ -178,11 +179,9 @@ class ObjectDecorator extends egret.DisplayObject {
 		ObjectDecorator.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE,ObjectDecorator.stageTouchMoveHandler,this);
 	}
 
-	private static updateRotateHandlePosition(){
+	public static updateRotateHandlePosition(){
 		
-		console.log(ObjectDecorator.currentObj);
 		if(ObjectDecorator.currentObj.handle!=null){	
-			
 			let distance=ObjectDecorator.currentObj.distance;
 			let rotation=ObjectDecorator.currentObj.angle+ObjectDecorator.currentObj.obj.rotation;
 			let angle=rotation*Math.PI/180;

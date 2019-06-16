@@ -149,20 +149,29 @@ var Main = (function (_super) {
      * Create a game scene
      */
     Main.prototype.createGameScene = function () {
-        var pen = this.createBitmapByName("pen_png");
+        var bg = new egret.Shape();
+        bg.graphics.beginFill(0x000000);
+        bg.graphics.drawRect(0, 0, this.stage.stageWidth, this.stage.stageHeight);
+        this.addChild(bg);
+        var pen = new LaserPen(this.stage);
         this.addChild(pen);
-        pen.x = 100;
-        pen.y = 100;
-        ObjectDecorator.get(pen).addDragAction(this.stage).upHandler(function () {
-            console.log("up1");
-        }).moveHandler(function () {
-            console.log("move1");
-        });
-        var rotate = this.createBitmapByName("rotate_png");
-        rotate.anchorOffsetX = rotate.width / 2;
-        rotate.anchorOffsetY = rotate.height / 2;
-        this.addChild(rotate);
-        ObjectDecorator.get(pen).addRotateAction(this.stage, rotate, 70, -90);
+        var mirror = new Mirror(this.stage);
+        mirror.x = 200;
+        mirror.y = 400;
+        this.addChild(mirror);
+        pen.addMirror(mirror.line);
+        mirror.addEventListener(Mirror.POSITION_CHANGE, function () {
+            pen.update();
+        }, this);
+        var mirror2 = new Mirror(this.stage);
+        mirror2.x = 600;
+        mirror2.y = 500;
+        this.addChild(mirror2);
+        pen.addMirror(mirror2.line);
+        mirror2.addEventListener(Mirror.POSITION_CHANGE, function () {
+            pen.update();
+        }, this);
+        pen.update();
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
