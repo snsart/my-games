@@ -151,18 +151,18 @@ var Main = (function (_super) {
     Main.prototype.createGameScene = function () {
         var pen = this.createBitmapByName("pen_png");
         this.addChild(pen);
+        pen.x = 100;
+        pen.y = 100;
         ObjectDecorator.get(pen).addDragAction(this.stage).upHandler(function () {
             console.log("up1");
         }).moveHandler(function () {
             console.log("move1");
         });
-        var pen2 = this.createBitmapByName("pen_png");
-        this.addChild(pen2);
-        ObjectDecorator.get(pen2).addDragAction(this.stage).upHandler(function () {
-            console.log("up2");
-        }).moveHandler(function () {
-            console.log("move2");
-        });
+        var rotate = this.createBitmapByName("rotate_png");
+        rotate.anchorOffsetX = rotate.width / 2;
+        rotate.anchorOffsetY = rotate.height / 2;
+        this.addChild(rotate);
+        ObjectDecorator.get(pen).addRotateAction(this.stage, rotate, 70, -90);
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。

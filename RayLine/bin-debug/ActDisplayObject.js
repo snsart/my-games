@@ -1,57 +1,27 @@
 var __reflect = (this && this.__reflect) || function (p, c, t) {
     p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
 };
-var ActDisplayObject = (function () {
-    function ActDisplayObject(obj, mouseup, mousedown, mousemove) {
+/*
+可拖动对象行为配置；
+*/
+var DragDisplayObject = (function () {
+    function DragDisplayObject(obj, mouseup, mousedown, mousemove) {
         if (mouseup === void 0) { mouseup = null; }
         if (mousedown === void 0) { mousedown = null; }
         if (mousemove === void 0) { mousemove = null; }
-        this._obj = obj;
-        this._mouseup = mouseup;
-        this._mousedown = mousedown;
-        this._mousemove = mousemove;
+        //拖动行为配置
+        this.center = true; //拖动时鼠标位置是否居中
+        this.range = null; //拖动范围
+        //旋转配置
+        this.handle = null; //控制杆
+        this.distance = 50; //控制杆离物体的距离
+        this.angle = 0; //控制杆的偏移角度
+        this.obj = obj;
+        this.mouseup = mouseup;
+        this.mousedown = mousedown;
+        this.mousemove = mousemove;
     }
-    Object.defineProperty(ActDisplayObject.prototype, "obj", {
-        get: function () {
-            return this._obj;
-        },
-        set: function (value) {
-            this._obj = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActDisplayObject.prototype, "mouseup", {
-        get: function () {
-            return this._mouseup;
-        },
-        set: function (value) {
-            this._mouseup = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActDisplayObject.prototype, "mousedown", {
-        get: function () {
-            return this._mousedown;
-        },
-        set: function (value) {
-            this._mousedown = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActDisplayObject.prototype, "mousemove", {
-        get: function () {
-            return this._mousemove;
-        },
-        set: function (value) {
-            this._mousemove = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return ActDisplayObject;
+    return DragDisplayObject;
 }());
-__reflect(ActDisplayObject.prototype, "ActDisplayObject");
+__reflect(DragDisplayObject.prototype, "DragDisplayObject");
 //# sourceMappingURL=ActDisplayObject.js.map

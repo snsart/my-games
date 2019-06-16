@@ -94,12 +94,19 @@ class Main extends egret.DisplayObjectContainer {
     private createGameScene() {
         let pen=this.createBitmapByName("pen_png");
         this.addChild(pen);
+        pen.x=100;
+        pen.y=100;
         ObjectDecorator.get(pen).addDragAction(this.stage).upHandler(function(){
             console.log("up1");
         }).moveHandler(function(){
             console.log("move1");
         });
 
+        let rotate=this.createBitmapByName("rotate_png");
+        rotate.anchorOffsetX=rotate.width/2;
+        rotate.anchorOffsetY=rotate.height/2
+        this.addChild(rotate);
+        ObjectDecorator.get(pen).addRotateAction(this.stage,rotate,70,-90);
     }
 
     /**
