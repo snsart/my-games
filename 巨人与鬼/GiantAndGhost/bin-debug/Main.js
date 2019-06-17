@@ -156,35 +156,65 @@ var Main = (function (_super) {
         bg.graphics.drawRect(0, 0, this.stage.stageWidth, this.stage.stageHeight);
         this.addChild(bg);
         this.lineShape = new egret.Shape();
+        this.lineShape.filters = [new egret.GlowFilter(0x0000ff, 0.1, 20, 20, 50)];
         this.addChild(this.lineShape);
-        this.createRoles(30);
-        this.drawLines();
+        this.createRoles(10);
+        var shootBtn = this.createBitmapByName("shootBtn_png");
+        this.addChild(shootBtn);
+        shootBtn.width = 200;
+        shootBtn.height = 200;
+        shootBtn.anchorOffsetX = shootBtn.width / 2;
+        shootBtn.anchorOffsetY = shootBtn.height / 2;
+        shootBtn.x = this.stage.stageWidth / 2;
+        shootBtn.y = this.stage.stageHeight - shootBtn.height / 2;
+        shootBtn.touchEnabled = true;
+        shootBtn.addEventListener(egret.TouchEvent.TOUCH_BEGIN, function () {
+            this.startShoot();
+        }, this);
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_END, function () {
+            this.stopShoot();
+        }, this);
     };
     Main.prototype.createRoles = function (num) {
         for (var i = 0; i < num; i++) {
             var ghost = new Ghost();
             ghost.x = Math.random() * this.stage.stageWidth;
-            ghost.y = Math.random() * this.stage.stageHeight;
-            ObjectDecorator.get(ghost).addDragAction(this.stage).moveHandler(this.drawLines.bind(this));
-            ;
+            ghost.y = Math.random() * (this.stage.stageHeight - 200);
+            ObjectDecorator.get(ghost).addDragAction(this.stage);
             this.addChild(ghost);
             var giant = new Giant();
             giant.x = Math.random() * this.stage.stageWidth;
-            giant.y = Math.random() * this.stage.stageHeight;
-            ObjectDecorator.get(giant).addDragAction(this.stage).moveHandler(this.drawLines.bind(this));
+            giant.y = Math.random() * (this.stage.stageHeight - 200);
+            ObjectDecorator.get(giant).addDragAction(this.stage);
             this.addChild(giant);
             this.roles.push(ghost, giant);
         }
     };
-    Main.prototype.drawLines = function () {
-        this.lineShape.graphics.clear();
-        this.lineShape.graphics.lineStyle(2, 0xff0000);
+    Main.prototype.stopShoot = function () {
+        var g = this.lineShape.graphics;
+        g.clear();
+        for (var i = 0; i < this.roles.length; i++) {
+            if (this.roles[i].type == Role.GHOSR_TYPE) {
+                this.roles[i].live();
+            }
+        }
+    };
+    Main.prototype.startShoot = function () {
+        var g = this.lineShape.graphics;
+        g.clear();
+        g.lineStyle(1, 0x9099ff);
         //shape.graphics.beginFill(fillColor);
+        for (var i = 0; i < this.roles.length; i++) {
+            if (this.roles[i].type == Role.GHOSR_TYPE) {
+                console.log(this.roles[i]);
+                this.roles[i].die();
+            }
+        }
         var mates = this.mates = [];
         this.getmates(this.roles);
-        for (var i = 0; i < mates.length; i++) {
-            this.lineShape.graphics.moveTo(mates[i][0].x, mates[i][0].y);
-            this.lineShape.graphics.lineTo(mates[i][1].x, mates[i][1].y);
+        for (var i = 0, len = mates.length; i < len; i++) {
+            g.moveTo(mates[i][0].x, mates[i][0].y);
+            g.lineTo(mates[i][1].x, mates[i][1].y);
         }
     };
     //求巨人-鬼对
@@ -197,22 +227,21 @@ var Main = (function (_super) {
         var lefts = [];
         var rights = [];
         var m = 0, n = 0; //lefts中巨人和小鬼的数量
-        console.log("heheheh");
         points.sort(this.compare.bind(this));
-        console.log("hahahah");
-        for (var i = 1; i < points.length; i++) {
-            if (points[i].type == startPoint.type) {
+        var type = startPoint.type, len = points.length;
+        for (var i = 1; i < len; i++) {
+            if (points[i].type == type) {
                 lefts.push(points[i]);
                 m++;
             }
-            else if (points[i].type != startPoint.type && m != n) {
+            else if (points[i].type != type && m != n) {
                 lefts.push(points[i]);
                 n++;
             }
             else {
                 mates.push([startPoint, points[i]]);
                 this.getmates(lefts);
-                for (var j = i + 1; j < points.length; j++) {
+                for (var j = i + 1; j < len; j++) {
                     rights.push(points[j]);
                 }
                 this.getmates(rights);
@@ -255,7 +284,7 @@ var Main = (function (_super) {
     //选出y轴最小的点startPoint
     Main.prototype.getStartPoint = function (points) {
         var startPoint = points[0];
-        for (var i = 1; i < points.length; i++) {
+        for (var i = 1, len = points.length; i < len; i++) {
             if (points[i].y < startPoint.y) {
                 startPoint = points[i];
             }
