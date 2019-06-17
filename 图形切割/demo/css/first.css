@@ -1,0 +1,132 @@
+html{
+	margin: 0;
+	padding: 0;
+	 animation: fadeIn 1s linear;
+    -moz-animation: fadeIn 1s linear;   	/* Firefox */
+    -webkit-animation: fadeIn 1s linear;	/* Safari 和 Chrome */
+    -o-animation: fadeIn 1s linear;	        /* Opera */
+   	background: #000000;
+}
+
+body{
+	margin: 0;
+	padding: 0;
+	font-size: 0;
+}
+
+/*高度永远等于视窗高度*/
+#canvasCont{
+	position: relative;
+	/*background-color: #000000;*/
+	margin: 0 auto;
+	background:url(../img/timg.jpg) no-repeat;
+	background-size:100% 100%;
+}
+
+canvas{
+	position: relative;
+	z-index: 0;
+}
+
+#btns-cont{
+	position: absolute;
+	margin: 0 auto;
+	bottom: 0;
+	height: 40px;
+	width: 100%;
+	background-color: #333333bb;
+}
+
+#btns-list{
+	margin: 4px 20px;
+	padding: 0;	
+}
+
+#btns-list li{
+	float: left;
+	list-style-type: none;
+	border-radius: 5px;
+	width: 30px;
+	height: 30px;
+	border: solid thin #000000;
+	margin: 0 2px;
+	
+	background: #444444;
+}
+
+#btns-list li:hover{
+	background: #666666;
+}
+
+#btns-list li.selected{
+	background: #222222;
+}
+
+.icon{
+	display: block;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background: no-repeat center / cover;
+}
+
+li.index1 .icon{
+	
+	background: url(../img/arrow.svg) ;
+}
+
+li.index2 .icon{
+	background: url(../img/hand.svg) ;
+}
+
+
+li.index3 .icon{
+	
+	background: url(../img/knife.svg) ;
+}
+
+#btns-list li.update,#btns-list li.help{
+	float: right;
+}
+
+li.update .icon{
+	background: url(../img/update.svg) ;
+}
+
+li.help .icon{
+	background: url(../img/help.svg) ;
+}
+
+
+
+
+
+/*修改滚动条*/
+/*# sourceMappingURL=primary_math.css.map */
+
+::-webkit-scrollbar {
+	width: 0.2rem;
+	height: 0.2rem;
+}
+
+::-webkit-scrollbar-track-piece {
+	background-color: rgba(255, 255, 255, 0);
+}
+
+::-webkit-scrollbar-thumb {
+	background: #77A944;
+	min-height: 0.2rem;
+	min-width: 0.2rem;
+	border-radius: 0.1rem;
+	margin-left: 0.3rem;
+}
+
+::-webkit-scrollbar-thumb:vertical:hover {
+	background: #77A944
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
+	background: #77A944
+}
+
+
