@@ -17,11 +17,24 @@ class Map extends egret.Sprite {
 	private _bridgesData:Bridge[]=[];
 	private _islandLine:Island[]=[];
 
+	private _background:egret.Shape=new egret.Shape();
+	private _grid:egret.Shape=new egret.Shape();
+
 	private _firstSelected:Island=null;
 
 	public constructor(datas=null) {
 		super();
 		this.createBackground();
+		this.createObject();
+	}
+
+	public update(datas){
+		this._datas=datas;
+		this.removeObject();
+		this.createObject();
+	}
+
+	public createObject(){
 		this.createGrid();
 		this.createIslands();
 		this.createBridges();
@@ -30,17 +43,50 @@ class Map extends egret.Sprite {
 		this.addEventToIsland();
 	}
 
-	public update(datas){
-
+	public removeObject(){
+		this.removeGrid();
+		this.removeEventToIsland();
+		this.removeIslands();
+		this.removeBridges();
 	}
 
 	private createBackground(){
-
+		let g=this._background.graphics;
+		g.beginFill(0xffffff);
+		g.lineStyle(1,0x666666);
+		g.drawRoundRect(10,10,this._width-20,this._width-20,20,20);
+		this.addChild(this._background);
 	}
 
+	/*创建/移除表格*/
 	private createGrid(){
+		let g=this._grid.graphics;
+		g.clear();
+		g.lineStyle(1,0x666666);
+		let numCol=this._datas[0].length;
+		let numRow=this._datas.length;
+		let space=this._width/(numCol+1);
 
+		for(let i=1;i<=numCol;i++){
+			let startX=i*space,startY=space,endX=i*space,endY=space*numRow;
+			g.moveTo(startX,startY);
+			g.lineTo(endX,endY);
+			console.log("drawline");
+		}
+		for(let i=1;i<=numRow;i++){
+			let startX=space,startY=i*space,endX=space*numCol,endY=i*space;
+			g.moveTo(startX,startY);
+			g.lineTo(endX,endY);
+		}
+		this.addChild(this._grid);
 	}
+
+	private removeGrid(){
+		let g=this._grid.graphics;
+		g.clear();
+	} 
+
+	/*添加/移除按钮的事件*/
 
 	private addEventToIsland(){
 		for(let i=0;i<this._islandLine.length;i++){
@@ -48,6 +94,14 @@ class Map extends egret.Sprite {
 			island.touchEnabled=true;
 			island.addEventListener(egret.TouchEvent.TOUCH_TAP,this.islandClickHandler,this)
 
+		}
+	}
+
+	private removeEventToIsland(){
+		for(let i=0;i<this._islandLine.length;i++){
+			let island=this._islandLine[i];
+			island.touchEnabled=false;
+			island.removeEventListener(egret.TouchEvent.TOUCH_TAP,this.islandClickHandler,this)
 		}
 	}
 
@@ -84,6 +138,8 @@ class Map extends egret.Sprite {
 		}	
 	}
 
+	/*已知两座岛，查找连接两岛的桥*/
+
 	private search(island1,island2):Bridge{
 		for(var i=0;i<this._bridgesData.length;i++){
 			let bridge=this._bridgesData[i];
@@ -94,6 +150,8 @@ class Map extends egret.Sprite {
 		}
 		return null;
 	}
+
+	/*创建小岛*/
 
 	private createIslands(){
 		let rowNum=this._datas.length;
@@ -118,21 +176,42 @@ class Map extends egret.Sprite {
 		}
 	}
 
-	private createBridges(){
-		let startIsland=this._islandLine[0];
-		this.check(startIsland);
-	}
-
 	private addIslands(){
 		for(let i=0;i<this._islandLine.length;i++){
 			this.addChild(this._islandLine[i]);
 		}
 	}
 
+	private removeIslands(){
+		for(let i=0;i<this._islandLine.length;i++){
+			if(this.getChildIndex(this._islandLine[i])!=-1){
+				this.removeChild(this._islandLine[i]);
+			}
+		}
+		this._islandLine=[];
+		this._islands=[];
+	}
+
+	/*创建/移除桥*/
+
+	private createBridges(){
+		let startIsland=this._islandLine[0];
+		this.check(startIsland);
+	}
+
 	private addBridges(){
 		for(let i=0;i<this._bridgesData.length;i++){
 			this.addChild(this._bridgesData[i]);
 		}
+	}
+
+	private removeBridges(){
+		for(let i=0;i<this._bridgesData.length;i++){
+			if(this.getChildIndex(this._bridgesData[i])!=-1){
+				this.removeChild(this._bridgesData[i]);
+			}
+		}
+		this._bridgesData=[];
 	}
 
 	private check(island:Island){
@@ -197,6 +276,7 @@ class Map extends egret.Sprite {
 	}
 
 	/*判断bridge和其他桥是否相交*/
+
 	private isCross(bridge:Bridge):boolean{
 		for(var i=0;i<this._bridgesData.length;i++){
 			let anotherBridge=this._bridgesData[i];

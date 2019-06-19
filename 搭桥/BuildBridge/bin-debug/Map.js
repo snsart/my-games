@@ -27,27 +27,74 @@ var Map = (function (_super) {
         _this._islands = [];
         _this._bridgesData = [];
         _this._islandLine = [];
+        _this._background = new egret.Shape();
+        _this._grid = new egret.Shape();
         _this._firstSelected = null;
         _this.createBackground();
-        _this.createGrid();
-        _this.createIslands();
-        _this.createBridges();
-        _this.addBridges();
-        _this.addIslands();
-        _this.addEventToIsland();
+        _this.createObject();
         return _this;
     }
     Map.prototype.update = function (datas) {
     };
+    Map.prototype.createObject = function () {
+        this.createGrid();
+        this.createIslands();
+        this.createBridges();
+        this.addBridges();
+        this.addIslands();
+        this.addEventToIsland();
+    };
+    Map.prototype.removeObject = function () {
+        this.removeGrid();
+        this.removeEventToIsland();
+        this.removeIslands();
+        this.removeBridges();
+    };
     Map.prototype.createBackground = function () {
+        var g = this._background.graphics;
+        g.beginFill(0xffffff);
+        g.lineStyle(1, 0x666666);
+        g.drawRoundRect(10, 10, this._width - 20, this._width - 20, 20, 20);
+        this.addChild(this._background);
     };
+    /*创建/移除表格*/
     Map.prototype.createGrid = function () {
+        var g = this._grid.graphics;
+        g.clear();
+        g.lineStyle(1, 0x666666);
+        var numCol = this._datas[0].length;
+        var numRow = this._datas.length;
+        var space = this._width / (numCol + 1);
+        for (var i = 1; i <= numCol; i++) {
+            var startX = i * space, startY = space, endX = i * space, endY = space * numRow;
+            g.moveTo(startX, startY);
+            g.lineTo(endX, endY);
+            console.log("drawline");
+        }
+        for (var i = 1; i <= numRow; i++) {
+            var startX = space, startY = i * space, endX = space * numCol, endY = i * space;
+            g.moveTo(startX, startY);
+            g.lineTo(endX, endY);
+        }
+        this.addChild(this._grid);
     };
+    Map.prototype.removeGrid = function () {
+        var g = this._grid.graphics;
+        g.clear();
+    };
+    /*添加/移除按钮的事件*/
     Map.prototype.addEventToIsland = function () {
         for (var i = 0; i < this._islandLine.length; i++) {
             var island = this._islandLine[i];
             island.touchEnabled = true;
             island.addEventListener(egret.TouchEvent.TOUCH_TAP, this.islandClickHandler, this);
+        }
+    };
+    Map.prototype.removeEventToIsland = function () {
+        for (var i = 0; i < this._islandLine.length; i++) {
+            var island = this._islandLine[i];
+            island.touchEnabled = false;
+            island.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.islandClickHandler, this);
         }
     };
     Map.prototype.islandClickHandler = function (e) {
@@ -86,6 +133,7 @@ var Map = (function (_super) {
                 break;
         }
     };
+    /*已知两座岛，查找连接两岛的桥*/
     Map.prototype.search = function (island1, island2) {
         for (var i = 0; i < this._bridgesData.length; i++) {
             var bridge = this._bridgesData[i];
@@ -96,6 +144,7 @@ var Map = (function (_super) {
         }
         return null;
     };
+    /*创建小岛*/
     Map.prototype.createIslands = function () {
         var rowNum = this._datas.length;
         var space = this._width / (rowNum + 1);
@@ -119,19 +168,37 @@ var Map = (function (_super) {
             this._islands.push(arr);
         }
     };
-    Map.prototype.createBridges = function () {
-        var startIsland = this._islandLine[0];
-        this.check(startIsland);
-    };
     Map.prototype.addIslands = function () {
         for (var i = 0; i < this._islandLine.length; i++) {
             this.addChild(this._islandLine[i]);
         }
     };
+    Map.prototype.removeIslands = function () {
+        for (var i = 0; i < this._islandLine.length; i++) {
+            if (this.getChildIndex(this._islandLine[i]) != -1) {
+                this.removeChild(this._islandLine[i]);
+            }
+        }
+        this._islandLine = [];
+        this._islands = [];
+    };
+    /*创建/移除桥*/
+    Map.prototype.createBridges = function () {
+        var startIsland = this._islandLine[0];
+        this.check(startIsland);
+    };
     Map.prototype.addBridges = function () {
         for (var i = 0; i < this._bridgesData.length; i++) {
             this.addChild(this._bridgesData[i]);
         }
+    };
+    Map.prototype.removeBridges = function () {
+        for (var i = 0; i < this._bridgesData.length; i++) {
+            if (this.getChildIndex(this._bridgesData[i]) != -1) {
+                this.removeChild(this._bridgesData[i]);
+            }
+        }
+        this._bridgesData = [];
     };
     Map.prototype.check = function (island) {
         var left = 0, top = 0;

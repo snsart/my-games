@@ -99,7 +99,7 @@ class Island extends egret.Sprite {
 				textColor=0xffffff;
 				break;
 			case Island.COMPLETED:
-				fillColor=0x888888;
+				fillColor=0x333333;
 				textColor=0xffffff;
 				break;
 		}
