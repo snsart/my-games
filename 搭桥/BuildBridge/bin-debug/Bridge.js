@@ -60,7 +60,7 @@ var Bridge = (function (_super) {
     Bridge.prototype.draw = function () {
         var g = this._bridgeShape.graphics;
         g.clear();
-        g.lineStyle(5, 0xff0000);
+        g.lineStyle(5, 0x333333);
         var start = new egret.Point(this._startIsland.x, this._startIsland.y);
         var end = new egret.Point(this._endIsland.x, this._endIsland.y);
         var space = 15; //两条桥以上时，桥之间的距离；

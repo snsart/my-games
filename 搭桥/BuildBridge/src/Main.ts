@@ -92,13 +92,30 @@ class Main extends egret.DisplayObjectContainer {
      * Create a game scene
      */
     private createGameScene() {
+        
+
         let bg=new egret.Shape();
-        bg.graphics.beginFill(0x333333);
+        bg.graphics.beginFill(0x222222);
         bg.graphics.drawRect(0,0,this.stage.stageWidth,this.stage.stageHeight);
         this.addChild(bg);
+
+       
+        let alertBack=new egret.Sprite();
+        alertBack.graphics.beginFill(0xffffff);
+        alertBack.graphics.drawRect(0,0,this.stage.stageWidth,100);
+        this.addChild(alertBack);
+        Alert.stage=alertBack;
         
-        let map=new Map();
+        console.log(Datas.currentLevel);
+        let map=new Map(Datas.currentLevelData());
+        map.y=120;
         this.addChild(map);
+
+        let controlPanel=new ControlPanel(map,this.stage.width,90);
+        controlPanel.y=this.stage.height-110;
+        this.addChild(controlPanel);
+
+       
     }
 
     /**

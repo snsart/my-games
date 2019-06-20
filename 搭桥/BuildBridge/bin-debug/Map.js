@@ -11,17 +11,7 @@ r.prototype = e.prototype, t.prototype = new r();
 var Map = (function (_super) {
     __extends(Map, _super);
     function Map(datas) {
-        if (datas === void 0) { datas = null; }
         var _this = _super.call(this) || this;
-        _this._datas = [
-            [0, 4, 0, 0, 5, 0, 3],
-            [2, 0, 0, 1, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 1],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 3, 0, 2, 0, 0, 0],
-            [3, 0, 0, 0, 4, 0, 2],
-        ];
         _this._width = 768;
         _this._height = 768;
         _this._islands = [];
@@ -30,11 +20,17 @@ var Map = (function (_super) {
         _this._background = new egret.Shape();
         _this._grid = new egret.Shape();
         _this._firstSelected = null;
+        _this._datas = datas;
+        console.log(_this._datas);
         _this.createBackground();
         _this.createObject();
         return _this;
     }
     Map.prototype.update = function (datas) {
+        this._datas = datas;
+        this._firstSelected = null;
+        this.removeObject();
+        this.createObject();
     };
     Map.prototype.createObject = function () {
         this.createGrid();
@@ -61,7 +57,8 @@ var Map = (function (_super) {
     Map.prototype.createGrid = function () {
         var g = this._grid.graphics;
         g.clear();
-        g.lineStyle(1, 0x666666);
+        g.lineStyle(1, 0xbbbbbb);
+        console.log(this._datas);
         var numCol = this._datas[0].length;
         var numRow = this._datas.length;
         var space = this._width / (numCol + 1);
@@ -113,8 +110,12 @@ var Map = (function (_super) {
                         }
                         else {
                             bridge.addLink();
+                            this.checkComplete();
                         }
                         this._firstSelected = null;
+                    }
+                    else {
+                        Alert.show("两岛之间只能垂直或水平搭桥，且桥不能相交");
                     }
                 }
                 else {
@@ -200,6 +201,22 @@ var Map = (function (_super) {
         }
         this._bridgesData = [];
     };
+    /*判断是否完成*/
+    Map.prototype.checkComplete = function () {
+        var unCompleteNum = 0;
+        var total = this._islandLine.length;
+        for (var i = 0; i < total; i++) {
+            if (this._islandLine[i].state != Island.COMPLETED) {
+                unCompleteNum++;
+            }
+        }
+        if (unCompleteNum != 0) {
+            Alert.show("还剩" + unCompleteNum + "个岛未完成，加油！");
+        }
+        else {
+            Alert.show("恭喜完成本关，你真棒!", 6000);
+        }
+    };
     Map.prototype.check = function (island) {
         var left = 0, top = 0;
         var bottom = this._datas.length - 1, right = this._datas[0].length - 1;
@@ -261,6 +278,11 @@ var Map = (function (_super) {
             if (anotherBridge == bridge || anotherBridge.linkNum == 0) {
                 continue;
             }
+            /*起点或终点重合的情况*/
+            if (bridge.startIsland == anotherBridge.startIsland || bridge.startIsland == anotherBridge.endIsland ||
+                bridge.endIsland == anotherBridge.startIsland || bridge.endIsland == anotherBridge.endIsland) {
+                continue;
+            }
             var start1 = new egret.Point(bridge.startIsland.x, bridge.startIsland.y);
             var end1 = new egret.Point(bridge.endIsland.x, bridge.endIsland.y);
             var start2 = new egret.Point(anotherBridge.startIsland.x, anotherBridge.startIsland.y);
@@ -282,8 +304,8 @@ var Map = (function (_super) {
         var y = -((b.y - a.y) * (d.y - c.y) * (c.x - a.x)
             + (b.x - a.x) * (d.y - c.y) * a.y
             - (d.x - c.x) * (b.y - a.y) * c.y) / denominator;
-        if (Math.round(x - a.x) * Math.round(x - b.x) < 0 && Math.round(y - a.y) * Math.round(y - b.y) < 0
-            && Math.round(x - c.x) * Math.round(x - d.x) < 0 && Math.round(y - c.y) * Math.round(y - d.y) < 0) {
+        if (Math.round(x - a.x) * Math.round(x - b.x) <= 0 && Math.round(y - a.y) * Math.round(y - b.y) <= 0
+            && Math.round(x - c.x) * Math.round(x - d.x) <= 0 && Math.round(y - c.y) * Math.round(y - d.y) <= 0) {
             return {
                 x: x,
                 y: y

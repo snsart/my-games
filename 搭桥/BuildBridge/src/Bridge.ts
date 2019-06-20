@@ -45,7 +45,7 @@ class Bridge extends egret.Sprite {
 	private draw(){
 		let g=this._bridgeShape.graphics;
 		g.clear();
-		g.lineStyle(5,0xff0000);
+		g.lineStyle(5,0x333333);
 		
 		let start=new egret.Point(this._startIsland.x,this._startIsland.y);
 		let end=new egret.Point(this._endIsland.x,this._endIsland.y);

@@ -150,11 +150,21 @@ var Main = (function (_super) {
      */
     Main.prototype.createGameScene = function () {
         var bg = new egret.Shape();
-        bg.graphics.beginFill(0x333333);
+        bg.graphics.beginFill(0x222222);
         bg.graphics.drawRect(0, 0, this.stage.stageWidth, this.stage.stageHeight);
         this.addChild(bg);
-        var map = new Map();
+        var alertBack = new egret.Sprite();
+        alertBack.graphics.beginFill(0xffffff);
+        alertBack.graphics.drawRect(0, 0, this.stage.stageWidth, 100);
+        this.addChild(alertBack);
+        Alert.stage = alertBack;
+        console.log(Datas.currentLevel);
+        var map = new Map(Datas.currentLevelData());
+        map.y = 120;
         this.addChild(map);
+        var controlPanel = new ControlPanel(map, this.stage.width, 90);
+        controlPanel.y = this.stage.height - 110;
+        this.addChild(controlPanel);
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。

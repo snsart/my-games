@@ -1,14 +1,6 @@
 class Map extends egret.Sprite {
 
-	private _datas=[
-				[0,4,0,0,5,0,3],
-				[2,0,0,1,0,0,0],
-				[0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,1],
-				[0,0,0,0,0,0,0],
-				[0,3,0,2,0,0,0],
-				[3,0,0,0,4,0,2],
-			];
+	private _datas;
 
 	private _width:number=768;
 	private _height:number=768;
@@ -22,14 +14,17 @@ class Map extends egret.Sprite {
 
 	private _firstSelected:Island=null;
 
-	public constructor(datas=null) {
+	public constructor(datas) {
 		super();
+		this._datas=datas;
+		console.log(this._datas);
 		this.createBackground();
 		this.createObject();
 	}
 
 	public update(datas){
 		this._datas=datas;
+		this._firstSelected=null;
 		this.removeObject();
 		this.createObject();
 	}
@@ -62,7 +57,8 @@ class Map extends egret.Sprite {
 	private createGrid(){
 		let g=this._grid.graphics;
 		g.clear();
-		g.lineStyle(1,0x666666);
+		g.lineStyle(1,0xbbbbbb);
+		console.log(this._datas);
 		let numCol=this._datas[0].length;
 		let numRow=this._datas.length;
 		let space=this._width/(numCol+1);
@@ -119,8 +115,11 @@ class Map extends egret.Sprite {
 							};
 						}else{
 							bridge.addLink();
+							this.checkComplete();
 						}
 						this._firstSelected=null;
+					}else{
+						Alert.show("两岛之间只能垂直或水平搭桥，且桥不能相交");
 					}
 				}else{
 					this._firstSelected=island;
@@ -214,6 +213,22 @@ class Map extends egret.Sprite {
 		this._bridgesData=[];
 	}
 
+	/*判断是否完成*/
+	private checkComplete(){
+		let unCompleteNum:number=0;
+		let total=this._islandLine.length;
+		for(let i=0;i<total;i++){
+			if(this._islandLine[i].state!=Island.COMPLETED){
+				unCompleteNum++;
+			}
+		}
+		if(unCompleteNum!=0){
+			Alert.show("还剩"+unCompleteNum+"个岛未完成，加油！");
+		}else{
+			Alert.show("恭喜完成本关，你真棒!",6000);
+		}
+	}
+
 	private check(island:Island){
 		
 		let left=0,top=0;
@@ -283,6 +298,13 @@ class Map extends egret.Sprite {
 			if(anotherBridge==bridge||anotherBridge.linkNum==0){
 				continue;
 			}
+
+			/*起点或终点重合的情况*/
+			if(bridge.startIsland==anotherBridge.startIsland||bridge.startIsland==anotherBridge.endIsland||
+				bridge.endIsland==anotherBridge.startIsland||bridge.endIsland==anotherBridge.endIsland){
+					continue;
+			}
+
 			let start1=new egret.Point(bridge.startIsland.x,bridge.startIsland.y);
 			let end1=new egret.Point(bridge.endIsland.x,bridge.endIsland.y);
 			let start2=new egret.Point(anotherBridge.startIsland.x,anotherBridge.startIsland.y);
@@ -306,8 +328,8 @@ class Map extends egret.Sprite {
 					+ (b.x - a.x) * (d.y - c.y) * a.y   
 					- (d.x - c.x) * (b.y - a.y) * c.y ) / denominator;   
 		if(  
-			Math.round(x - a.x) * Math.round(x - b.x) < 0 && Math.round(y - a.y) * Math.round(y - b.y) < 0  
-			&& Math.round(x - c.x) * Math.round(x - d.x) < 0 && Math.round(y - c.y) * Math.round(y - d.y) < 0  
+			Math.round(x - a.x) * Math.round(x - b.x) <= 0 && Math.round(y - a.y) * Math.round(y - b.y) <= 0  
+			&& Math.round(x - c.x) * Math.round(x - d.x) <= 0 && Math.round(y - c.y) * Math.round(y - d.y) <= 0  
 		){  
 			return {  
 				x :  x,  
