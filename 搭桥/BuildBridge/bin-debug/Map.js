@@ -10,16 +10,16 @@ r.prototype = e.prototype, t.prototype = new r();
 };
 var Map = (function (_super) {
     __extends(Map, _super);
-    function Map(datas) {
+    function Map(datas, width, height) {
         var _this = _super.call(this) || this;
-        _this._width = 768;
-        _this._height = 768;
         _this._islands = [];
         _this._bridgesData = [];
         _this._islandLine = [];
         _this._background = new egret.Shape();
         _this._grid = new egret.Shape();
         _this._firstSelected = null;
+        _this._width = width;
+        _this._height = height;
         _this._datas = datas;
         console.log(_this._datas);
         _this.createBackground();
@@ -154,7 +154,7 @@ var Map = (function (_super) {
             for (var colIndex = 0, colNum = this._datas[rowIndex].length; colIndex < colNum; colIndex++) {
                 var num = this._datas[rowIndex][colIndex];
                 if (num != 0) {
-                    var island = new Island(num);
+                    var island = new Island(num, space / 2);
                     island.x = (colIndex + 1) * space;
                     island.y = (rowIndex + 1) * space;
                     island.rowIndx = rowIndex;

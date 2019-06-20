@@ -106,8 +106,7 @@ class Main extends egret.DisplayObjectContainer {
         this.addChild(alertBack);
         Alert.stage=alertBack;
         
-        console.log(Datas.currentLevel);
-        let map=new Map(Datas.currentLevelData());
+        let map=new Map(Datas.currentLevelData(),this.stage.stageWidth,this.stage.stageWidth);
         map.y=120;
         this.addChild(map);
 

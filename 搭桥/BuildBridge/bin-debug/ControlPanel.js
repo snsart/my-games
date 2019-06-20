@@ -51,7 +51,7 @@ var ControlPanel = (function (_super) {
     };
     ControlPanel.prototype.addLevelInfo = function () {
         var levelSprite = this.createLevelInfo();
-        levelSprite.x = 200;
+        levelSprite.x = 170;
         levelSprite.y = 10;
         this.addChild(levelSprite);
     };
@@ -74,7 +74,7 @@ var ControlPanel = (function (_super) {
         }, this);
         prebutton.clickable = false;
         nextButton = new Button("下一关");
-        nextButton.x = 330;
+        nextButton.x = 270;
         nextButton.y = 10;
         this.addChild(nextButton);
         nextButton.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {

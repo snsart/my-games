@@ -158,8 +158,7 @@ var Main = (function (_super) {
         alertBack.graphics.drawRect(0, 0, this.stage.stageWidth, 100);
         this.addChild(alertBack);
         Alert.stage = alertBack;
-        console.log(Datas.currentLevel);
-        var map = new Map(Datas.currentLevelData());
+        var map = new Map(Datas.currentLevelData(), this.stage.stageWidth, this.stage.stageWidth);
         map.y = 120;
         this.addChild(map);
         var controlPanel = new ControlPanel(map, this.stage.width, 90);

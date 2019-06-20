@@ -2,8 +2,8 @@ class Map extends egret.Sprite {
 
 	private _datas;
 
-	private _width:number=768;
-	private _height:number=768;
+	private _width:number;
+	private _height:number;
 
 	private _islands=[];
 	private _bridgesData:Bridge[]=[];
@@ -14,8 +14,10 @@ class Map extends egret.Sprite {
 
 	private _firstSelected:Island=null;
 
-	public constructor(datas) {
+	public constructor(datas,width,height) {
 		super();
+		this._width=width;
+		this._height=height;
 		this._datas=datas;
 		console.log(this._datas);
 		this.createBackground();
@@ -160,7 +162,7 @@ class Map extends egret.Sprite {
 			for(let colIndex=0,colNum=this._datas[rowIndex].length;colIndex<colNum;colIndex++){
 				let num=this._datas[rowIndex][colIndex];
 				if(num!=0){
-					let island:Island=new Island(num);
+					let island:Island=new Island(num,space/2);
 					island.x=(colIndex+1)*space;
 					island.y=(rowIndex+1)*space;
 					island.rowIndx=rowIndex;
