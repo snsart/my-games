@@ -18,6 +18,7 @@ var Map = (function (_super) {
         _this._background = new egret.Shape();
         _this._grid = new egret.Shape();
         _this._firstSelected = null;
+        _this._selected = [];
         _this._width = width;
         _this._height = height;
         _this._datas = datas;
@@ -29,6 +30,7 @@ var Map = (function (_super) {
     Map.prototype.update = function (datas) {
         this._datas = datas;
         this._firstSelected = null;
+        this._selected = [];
         this.removeObject();
         this.createObject();
     };
@@ -103,10 +105,10 @@ var Map = (function (_super) {
                     var bridge = this.search(island, this._firstSelected);
                     if (bridge != null && !this.isCross(bridge)) {
                         if (this._firstSelected.currentBridgeNum == this._firstSelected.totalBridgeNum || island.currentBridgeNum == island.totalBridgeNum) {
-                            while (bridge.linkNum != 0) {
+                            do {
                                 bridge.addLink();
-                            }
-                            ;
+                            } while (bridge.linkNum != 0);
+                            Alert.show("岛上连接的桥不能超过岛上的数字");
                         }
                         else {
                             bridge.addLink();

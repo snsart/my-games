@@ -13,6 +13,7 @@ class Map extends egret.Sprite {
 	private _grid:egret.Shape=new egret.Shape();
 
 	private _firstSelected:Island=null;
+	private _selected:Island[]=[];
 
 	public constructor(datas,width,height) {
 		super();
@@ -27,6 +28,7 @@ class Map extends egret.Sprite {
 	public update(datas){
 		this._datas=datas;
 		this._firstSelected=null;
+		this._selected=[];
 		this.removeObject();
 		this.createObject();
 	}
@@ -112,9 +114,10 @@ class Map extends egret.Sprite {
 					let bridge=this.search(island,this._firstSelected);
 					if(bridge !=null&&!this.isCross(bridge)){
 						if(this._firstSelected.currentBridgeNum==this._firstSelected.totalBridgeNum||island.currentBridgeNum==island.totalBridgeNum){
-							while(bridge.linkNum!=0){
+							do{
 								bridge.addLink();
-							};
+							}while(bridge.linkNum!=0);
+							Alert.show("岛上连接的桥不能超过岛上的数字");
 						}else{
 							bridge.addLink();
 							this.checkComplete();
@@ -138,6 +141,8 @@ class Map extends egret.Sprite {
 				break;
 		}	
 	}
+
+	
 
 	/*已知两座岛，查找连接两岛的桥*/
 
