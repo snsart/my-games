@@ -24,7 +24,41 @@ class ControlPanel extends egret.Sprite {
 	private addBtns(){
 		let prebutton,nextButton,replayButton;
 
-		prebutton=new Button("上一关");
+		let drawBtn:eui.ToggleButton=new eui.ToggleButton();
+		drawBtn.label="绘 图";
+		drawBtn.width=100;
+		drawBtn.height=50;
+		drawBtn.x=10;
+		drawBtn.y=5;
+		this.addChild(drawBtn);
+
+		
+		let markBtn:eui.ToggleButton=new eui.ToggleButton();
+		markBtn.label="标 记";
+		markBtn.width=100;
+		markBtn.height=50;
+		markBtn.x=120;
+		markBtn.y=5;
+		this.addChild(markBtn);
+
+		
+		let answerBtn:eui.ToggleButton=new eui.ToggleButton();
+		answerBtn.label="答 案";
+		answerBtn.width=100;
+		answerBtn.height=50;
+		answerBtn.x=230;
+		answerBtn.y=5;
+		this.addChild(answerBtn);
+
+		let updateBtn:eui.Button=new eui.Button();
+		updateBtn.label="刷 新";
+		updateBtn.width=100;
+		updateBtn.height=50;
+		updateBtn.x=this._width-110;
+		updateBtn.y=5;
+		this.addChild(updateBtn);
+/*
+		prebutton=new Button("绘图");
         prebutton.x=10;
 		prebutton.y=10;
         this.addChild(prebutton);
@@ -50,7 +84,7 @@ class ControlPanel extends egret.Sprite {
 			
 		},this);
 		replayButton.clickable=true;
-
+*/
 	}
 
 }

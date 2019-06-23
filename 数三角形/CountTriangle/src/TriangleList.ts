@@ -17,7 +17,6 @@ class TriangleList extends eui.Group{
 		let bg:egret.Shape=new egret.Shape();
 		let g=bg.graphics;
 		g.beginFill(0xffffff);
-		g.lineStyle(1,0xcccccc);
 		g.drawRoundRect(0,0,this._width,this._height,20,20);
 		this.addChild(bg);
 	}

@@ -181,6 +181,10 @@ var Main = (function (_super) {
         triangleList.x = this.stage.stageWidth - listWidth;
         triangleList.y = 50;
         this.addChild(triangleList);
+        var mark = new Mark("A");
+        mark.x = 200;
+        mark.y = 200;
+        this.addChild(mark);
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。

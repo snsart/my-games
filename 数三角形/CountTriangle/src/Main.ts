@@ -117,6 +117,11 @@ class Main extends eui.UILayer {
         triangleList.x=this.stage.stageWidth-listWidth;
         triangleList.y=50;
         this.addChild(triangleList);
+
+        let mark=new Mark("A");
+        mark.x=200;
+        mark.y=200
+        this.addChild(mark);
         
     }
     /**

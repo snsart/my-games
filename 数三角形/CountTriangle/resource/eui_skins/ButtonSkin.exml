@@ -5,6 +5,6 @@
              source.down="button_down_png"/>
     <e:Label id="labelDisplay" top="8" bottom="8" left="8" right="8"
              size="20"
-             textColor="0xFFFFFF" verticalAlign="middle" textAlign="center"/>
+             textColor="0xFFFFFF" fontFamily="微软雅黑" verticalAlign="middle" textAlign="center"/>
     <e:Image id="iconDisplay" horizontalCenter="0" verticalCenter="0"/>
 </e:Skin>

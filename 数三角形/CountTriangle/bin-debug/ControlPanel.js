@@ -28,27 +28,62 @@ var ControlPanel = (function (_super) {
     };
     ControlPanel.prototype.addBtns = function () {
         var prebutton, nextButton, replayButton;
-        prebutton = new Button("上一关");
-        prebutton.x = 10;
-        prebutton.y = 10;
-        this.addChild(prebutton);
-        prebutton.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
-        }, this);
-        prebutton.clickable = false;
-        nextButton = new Button("下一关");
-        nextButton.x = 270;
-        nextButton.y = 10;
-        this.addChild(nextButton);
-        nextButton.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
-        }, this);
-        nextButton.clickable = true;
-        replayButton = new Button("重 玩");
-        replayButton.x = this._width - replayButton.width - 10;
-        replayButton.y = 10;
-        this.addChild(replayButton);
-        replayButton.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
-        }, this);
-        replayButton.clickable = true;
+        var drawBtn = new eui.ToggleButton();
+        drawBtn.label = "绘 图";
+        drawBtn.width = 100;
+        drawBtn.height = 50;
+        drawBtn.x = 10;
+        drawBtn.y = 5;
+        this.addChild(drawBtn);
+        var markBtn = new eui.ToggleButton();
+        markBtn.label = "标 记";
+        markBtn.width = 100;
+        markBtn.height = 50;
+        markBtn.x = 120;
+        markBtn.y = 5;
+        this.addChild(markBtn);
+        var answerBtn = new eui.ToggleButton();
+        answerBtn.label = "答 案";
+        answerBtn.width = 100;
+        answerBtn.height = 50;
+        answerBtn.x = 230;
+        answerBtn.y = 5;
+        this.addChild(answerBtn);
+        var updateBtn = new eui.Button();
+        updateBtn.label = "刷 新";
+        updateBtn.width = 100;
+        updateBtn.height = 50;
+        updateBtn.x = this._width - 110;
+        updateBtn.y = 5;
+        this.addChild(updateBtn);
+        /*
+                prebutton=new Button("绘图");
+                prebutton.x=10;
+                prebutton.y=10;
+                this.addChild(prebutton);
+                prebutton.addEventListener(egret.TouchEvent.TOUCH_TAP,function(e){
+                
+                },this);
+                prebutton.clickable=false;
+        
+                nextButton=new Button("下一关");
+                nextButton.x=270;
+                nextButton.y=10;
+                this.addChild(nextButton);
+                nextButton.addEventListener(egret.TouchEvent.TOUCH_TAP,function(e){
+                    
+                },this);
+                nextButton.clickable=true;
+        
+                replayButton=new Button("重 玩");
+                replayButton.x=this._width-replayButton.width-10;
+                replayButton.y=10;
+                this.addChild(replayButton);
+                replayButton.addEventListener(egret.TouchEvent.TOUCH_TAP,function(e){
+                    
+                },this);
+                replayButton.clickable=true;
+        */
     };
     return ControlPanel;
 }(egret.Sprite));
