@@ -25,41 +25,4 @@ class DragDisplayObject{
 		this.mousemove=mousemove;
 	}
 
-	/*public set obj(value:egret.DisplayObject){
-		this._obj=value;
-	}
-
-
-	public get obj():egret.DisplayObject{
-		return this._obj;
-	}
-
-	public set mouseup(value:Function){
-		this._mouseup=value;
-	}
-
-
-	public get mouseup():Function{
-		return this._mouseup;
-	}
-
-
-	public set mousedown(value:Function){
-		this._mousedown=value;
-	}
-
-
-	public get mousedown():Function{
-		return this._mousedown;
-	}
-
-	public set mousemove(value:Function){
-		this._mousemove=value;
-	}
-
-
-	public get mousemove():Function{
-		return this._mousemove;
-	}*/
-
 }

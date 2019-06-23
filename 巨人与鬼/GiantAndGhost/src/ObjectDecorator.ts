@@ -1,5 +1,5 @@
 /*
-*
+*为DisplayObject对象添加拖拽、旋转等行为;
 */
 
 class ObjectDecorator extends egret.DisplayObject {
@@ -28,6 +28,13 @@ class ObjectDecorator extends egret.DisplayObject {
 		return ObjectDecorator;
 	}
 
+	/**添加拖拽行为
+	*@stage:舞台
+	*@handle:旋转控制杆
+	*@distance:控制杆距离物体注册中心的距离
+	*@angle:控制杆初始角度
+	*/
+
 	public static addDragAction(stage:egret.Stage,rect:egret.Rectangle=null,center:boolean=false){
 
 		ObjectDecorator.currentObj.obj.touchEnabled=true;
@@ -43,6 +50,7 @@ class ObjectDecorator extends egret.DisplayObject {
 	}
 
 	/*添加旋转行为
+	*@stage:舞台
 	*@handle:旋转控制杆
 	*@distance:控制杆距离物体注册中心的距离
 	*@angle:控制杆初始角度
