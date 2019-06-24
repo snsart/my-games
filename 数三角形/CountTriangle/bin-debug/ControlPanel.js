@@ -10,10 +10,11 @@ r.prototype = e.prototype, t.prototype = new r();
 };
 var ControlPanel = (function (_super) {
     __extends(ControlPanel, _super);
-    function ControlPanel(width, height) {
+    function ControlPanel(width, height, canvas) {
         var _this = _super.call(this) || this;
         _this._width = width;
         _this._height = height;
+        _this._canvas = canvas;
         _this.createBackGround();
         _this.addBtns();
         return _this;
@@ -35,18 +36,31 @@ var ControlPanel = (function (_super) {
         drawBtn.x = 10;
         drawBtn.y = 5;
         this.addChild(drawBtn);
+        var reDrawBtn = new eui.ToggleButton();
+        reDrawBtn.label = "修 正";
+        reDrawBtn.width = 100;
+        reDrawBtn.height = 50;
+        reDrawBtn.x = 120;
+        reDrawBtn.y = 5;
+        this.addChild(reDrawBtn);
+        reDrawBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
+            this._canvas.reDraw();
+        }, this);
         var markBtn = new eui.ToggleButton();
         markBtn.label = "标 记";
         markBtn.width = 100;
         markBtn.height = 50;
-        markBtn.x = 120;
+        markBtn.x = 230;
         markBtn.y = 5;
         this.addChild(markBtn);
+        markBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
+            this._canvas.markCross();
+        }, this);
         var answerBtn = new eui.ToggleButton();
         answerBtn.label = "答 案";
         answerBtn.width = 100;
         answerBtn.height = 50;
-        answerBtn.x = 230;
+        answerBtn.x = 340;
         answerBtn.y = 5;
         this.addChild(answerBtn);
         var updateBtn = new eui.Button();

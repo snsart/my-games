@@ -5,10 +5,15 @@ class Canvas extends egret.Sprite {
 	private _drawAble:boolean=true;
 	private _startPoint:egret.Point;
 	private _bg:egret.Shape=new egret.Shape();
-	private _lines=[];
-	private _currentLine:egret.Shape;
 
-	private _points:egret.Point[]=[];
+	private _lines=[];//线条，包括起点和终点
+	private _linesWithCross=[];//线条，包括中间的交点
+
+	private _currentLine:egret.Shape;
+	private _lineShapes:egret.Shape[]=[];//所有的线段
+
+	private _points:egret.Point[]=[];//所有的点，包括端点
+	private _markCrossPoints:egret.Point[]=[];//所有的交点
 
 	public constructor(width:number,height:number) {
 		super();
@@ -30,11 +35,68 @@ class Canvas extends egret.Sprite {
 		}
 	}
 
+	/*对图形进行修剪*/
+
+	public reDraw(){
+		for(let i=0;i<this._lineShapes.length;i++){
+			this.removeChild(this._lineShapes[i]);
+		}
+		this._lineShapes=[];
+
+		this._linesWithCross=this.getLinesWithCross(this._lines);
+		this.sortLines(this._linesWithCross);
+		this.trimLines(this._linesWithCross);
+	
+		this._currentLine=new egret.Shape();
+		let g=this._currentLine.graphics;
+		g.lineStyle(3,0x000000);
+
+		for(let i=0;i<this._linesWithCross.length;i++){
+			let start=this._linesWithCross[i][0],end=this._linesWithCross[i][this._linesWithCross[i].length-1];
+			g.moveTo(start.x,start.y);
+			g.lineTo(end.x,end.y);
+		}
+		this.addChild(this._currentLine);
+
+	}
+
+	/*标记交点*/
+	public markCross(){
+		this.setMartCrossPoints();
+		let crossLines=this.getLinesWithCross(this._lines);
+		let table=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U"];
+		for(let i=0;i<this._markCrossPoints.length;i++){
+			let mark=new Mark(table[i]);
+			mark.x=this._markCrossPoints[i].x;
+			mark.y=this._markCrossPoints[i].y;
+			this.addChild(mark);
+		}
+	}
+
+	/*取得所有的交点*/
+	public setMartCrossPoints(){
+		this._markCrossPoints=this._points.concat();
+		for(let i=this._markCrossPoints.length;i>=0;i--){
+			let point=this._markCrossPoints[i];
+			let isCross=false;
+			for(let j=0;j<this._linesWithCross.length;j++){
+				if(this._linesWithCross[j].indexOf(point)!=-1){
+					isCross=true;
+				}
+			}
+			if(!isCross){
+				this._markCrossPoints.splice(i,1);
+			}
+		}
+	}
+
+
 	private addEvents(){
 		this.addEventListener(egret.TouchEvent.TOUCH_BEGIN,function(e){
 			let x=e.stageX-this.x;
 			let y=e.stageY-this.y;
 			this._currentLine=new egret.Shape();
+			this._lineShapes.push(this._currentLine);
 			this.addChild(this._currentLine);
 			this._startPoint=new egret.Point(x,y);
 			this.addEventListener(egret.TouchEvent.TOUCH_END,this.drawEndHandler,this);
@@ -56,15 +118,6 @@ class Canvas extends egret.Sprite {
 		this._lines.push([this._startPoint,endPoint]);
 		this._startPoint=null;
 		this.removeEventListener(egret.TouchEvent.TOUCH_END,this.drawEndHandler,this);
-
-		let crossLines=this.getLinesWithCross(this._lines);
-		console.log(crossLines);
-
-		this.sortLines(crossLines);
-		console.log(crossLines);
-
-		this.trimLines(crossLines);
-		console.log(crossLines);
 	}
 
 	/** 
@@ -118,7 +171,7 @@ class Canvas extends egret.Sprite {
 	private getPointsNearBy(point:egret.Point,points:egret.Point[]){
 		return points.filter(function(value,index,array){
 			let distance=(value.x-point.x)*(value.x-point.x)+(value.y-point.y)*(value.y-point.y);
-			if(distance<100){
+			if(distance<400){
 				return true;
 			}
 		});
@@ -154,10 +207,14 @@ class Canvas extends egret.Sprite {
 				}
 			}
 			if(!startIsCross){
+				console.log("trimstart");
 				lines[i].splice(0,1);
 			}
 			if(!endIsCross){
+				console.log("trimend");
+				console.log(lines[i].length);
 				lines[i].splice(lines[i].length-1,1);
+				console.log(lines[i].length);
 			}
 		}
 	}

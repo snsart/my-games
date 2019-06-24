@@ -171,7 +171,7 @@ var Main = (function (_super) {
         var canvas = new Canvas(canvasWidth, canvasHeight);
         canvas.y = 50;
         this.addChild(canvas);
-        var buttonPanel = new ControlPanel(this.stage.stageWidth * 0.8 - 20, 60);
+        var buttonPanel = new ControlPanel(this.stage.stageWidth * 0.8 - 20, 60, canvas);
         buttonPanel.x = 10;
         buttonPanel.y = this.stage.stageHeight - 80;
         this.addChild(buttonPanel);

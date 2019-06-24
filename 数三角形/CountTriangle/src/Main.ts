@@ -106,7 +106,7 @@ class Main extends eui.UILayer {
         canvas.y=50;
         this.addChild(canvas);
 
-        let buttonPanel=new ControlPanel(this.stage.stageWidth*0.8-20,60);
+        let buttonPanel=new ControlPanel(this.stage.stageWidth*0.8-20,60,canvas);
         buttonPanel.x=10;
         buttonPanel.y=this.stage.stageHeight-80;
         this.addChild(buttonPanel);

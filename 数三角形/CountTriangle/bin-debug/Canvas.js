@@ -14,8 +14,11 @@ var Canvas = (function (_super) {
         var _this = _super.call(this) || this;
         _this._drawAble = true;
         _this._bg = new egret.Shape();
-        _this._lines = [];
-        _this._points = [];
+        _this._lines = []; //线条，包括起点和终点
+        _this._linesWithCross = []; //线条，包括中间的交点
+        _this._lineShapes = []; //所有的线段
+        _this._points = []; //所有的点，包括端点
+        _this._markCrossPoints = []; //所有的交点
         _this._width = width;
         _this._height = height;
         _this._startPoint;
@@ -38,11 +41,59 @@ var Canvas = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    /*对图形进行修剪*/
+    Canvas.prototype.reDraw = function () {
+        for (var i = 0; i < this._lineShapes.length; i++) {
+            this.removeChild(this._lineShapes[i]);
+        }
+        this._lineShapes = [];
+        this._linesWithCross = this.getLinesWithCross(this._lines);
+        this.sortLines(this._linesWithCross);
+        this.trimLines(this._linesWithCross);
+        this._currentLine = new egret.Shape();
+        var g = this._currentLine.graphics;
+        g.lineStyle(3, 0x000000);
+        for (var i = 0; i < this._linesWithCross.length; i++) {
+            var start = this._linesWithCross[i][0], end = this._linesWithCross[i][this._linesWithCross[i].length - 1];
+            g.moveTo(start.x, start.y);
+            g.lineTo(end.x, end.y);
+        }
+        this.addChild(this._currentLine);
+    };
+    /*标记交点*/
+    Canvas.prototype.markCross = function () {
+        this.setMartCrossPoints();
+        var crossLines = this.getLinesWithCross(this._lines);
+        var table = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U"];
+        for (var i = 0; i < this._markCrossPoints.length; i++) {
+            var mark = new Mark(table[i]);
+            mark.x = this._markCrossPoints[i].x;
+            mark.y = this._markCrossPoints[i].y;
+            this.addChild(mark);
+        }
+    };
+    /*取得所有的交点*/
+    Canvas.prototype.setMartCrossPoints = function () {
+        this._markCrossPoints = this._points.concat();
+        for (var i = this._markCrossPoints.length; i >= 0; i--) {
+            var point = this._markCrossPoints[i];
+            var isCross = false;
+            for (var j = 0; j < this._linesWithCross.length; j++) {
+                if (this._linesWithCross[j].indexOf(point) != -1) {
+                    isCross = true;
+                }
+            }
+            if (!isCross) {
+                this._markCrossPoints.splice(i, 1);
+            }
+        }
+    };
     Canvas.prototype.addEvents = function () {
         this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, function (e) {
             var x = e.stageX - this.x;
             var y = e.stageY - this.y;
             this._currentLine = new egret.Shape();
+            this._lineShapes.push(this._currentLine);
             this.addChild(this._currentLine);
             this._startPoint = new egret.Point(x, y);
             this.addEventListener(egret.TouchEvent.TOUCH_END, this.drawEndHandler, this);
@@ -62,12 +113,6 @@ var Canvas = (function (_super) {
         this._lines.push([this._startPoint, endPoint]);
         this._startPoint = null;
         this.removeEventListener(egret.TouchEvent.TOUCH_END, this.drawEndHandler, this);
-        var crossLines = this.getLinesWithCross(this._lines);
-        console.log(crossLines);
-        this.sortLines(crossLines);
-        console.log(crossLines);
-        this.trimLines(crossLines);
-        console.log(crossLines);
     };
     /**
      *生成带有交点的线段集
@@ -114,7 +159,7 @@ var Canvas = (function (_super) {
     Canvas.prototype.getPointsNearBy = function (point, points) {
         return points.filter(function (value, index, array) {
             var distance = (value.x - point.x) * (value.x - point.x) + (value.y - point.y) * (value.y - point.y);
-            if (distance < 100) {
+            if (distance < 400) {
                 return true;
             }
         });
@@ -152,10 +197,14 @@ var Canvas = (function (_super) {
                 }
             }
             if (!startIsCross) {
+                console.log("trimstart");
                 lines[i].splice(0, 1);
             }
             if (!endIsCross) {
+                console.log("trimend");
+                console.log(lines[i].length);
                 lines[i].splice(lines[i].length - 1, 1);
+                console.log(lines[i].length);
             }
         }
     };

@@ -3,11 +3,13 @@ class ControlPanel extends egret.Sprite {
 	private _width:number;
 	private _height:number;
 	private _levelInfo:egret.TextField;
+	private _canvas:Canvas;
 
-	public constructor(width:number,height:number) {
+	public constructor(width:number,height:number,canvas:Canvas) {
 		super();
 		this._width=width;
 		this._height=height;
+		this._canvas=canvas;
 		this.createBackGround();
 		this.addBtns();
 	}
@@ -33,20 +35,35 @@ class ControlPanel extends egret.Sprite {
 		this.addChild(drawBtn);
 
 		
+		let reDrawBtn:eui.ToggleButton=new eui.ToggleButton();
+		reDrawBtn.label="修 正";
+		reDrawBtn.width=100;
+		reDrawBtn.height=50;
+		reDrawBtn.x=120;
+		reDrawBtn.y=5;
+		this.addChild(reDrawBtn);
+		reDrawBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,function(e){
+			this._canvas.reDraw();
+		},this)
+
 		let markBtn:eui.ToggleButton=new eui.ToggleButton();
 		markBtn.label="标 记";
 		markBtn.width=100;
 		markBtn.height=50;
-		markBtn.x=120;
+		markBtn.x=230;
 		markBtn.y=5;
 		this.addChild(markBtn);
+		markBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,function(e){
+			this._canvas.markCross();
+		},this)
+
 
 		
 		let answerBtn:eui.ToggleButton=new eui.ToggleButton();
 		answerBtn.label="答 案";
 		answerBtn.width=100;
 		answerBtn.height=50;
-		answerBtn.x=230;
+		answerBtn.x=340;
 		answerBtn.y=5;
 		this.addChild(answerBtn);
 
