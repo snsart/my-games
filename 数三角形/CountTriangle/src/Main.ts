@@ -108,7 +108,7 @@ class Main extends eui.UILayer {
 
         let listWidth=this.stage.stageWidth*0.2-10;
         let listHeight=this.stage.stageHeight-60;
-        let triangleList=new TriangleList(listWidth,listHeight);
+        let triangleList=new TriangleList(listWidth,listHeight,canvas);
         triangleList.x=this.stage.stageWidth-listWidth;
         triangleList.y=50;
         this.addChild(triangleList);

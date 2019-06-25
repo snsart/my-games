@@ -17,7 +17,9 @@ class Canvas extends egret.Sprite {
 
 	private _label=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U"];
 
-	private _triangles=[];
+	private _triangleNames=[];//三角形名称，用来渲染列表;
+	private _triangles=[];//三角形集合，存储三角形顶点；
+	private _showTriangleShape:egret.Shape=new egret.Shape();
 
 	public constructor(width:number,height:number) {
 		super();
@@ -27,6 +29,8 @@ class Canvas extends egret.Sprite {
 		this.touchEnabled=true;
 		this.createBackGround();
 		this.addChild(this._bg);
+		this.addChild(this._showTriangleShape);
+		this._showTriangleShape.alpha=0.5;
 		this.addEvents();
 	}
 
@@ -77,8 +81,28 @@ class Canvas extends egret.Sprite {
 		}
 	}
 
-	/*显示答案*/
-	public showAnswer(){
+	
+
+	/*得到所有三角形*/
+	public get triangles(){
+		this.fillTrianglesList();
+		return this._triangleNames;
+	}
+
+	/*显示指定三角形*/
+	public showTriangleByIndex(index:number){
+		let triangle=this._triangles[index];
+		let g=this._showTriangleShape.graphics;
+		g.clear();
+		g.beginFill(0x00ff00);
+		g.moveTo(triangle[0].x,triangle[0].y);
+		g.lineTo(triangle[1].x,triangle[1].y);
+		g.lineTo(triangle[2].x,triangle[2].y);
+		g.endFill();
+	}
+
+	/*获取所有三角形并填充三角形容器列表*/
+	private fillTrianglesList(){
 		let len=this._markCrossPoints.length;
 		let triangleNum:number=0;
 		for(let i=0;i<len-2;i++){
@@ -89,18 +113,14 @@ class Canvas extends egret.Sprite {
 					let p3={p:this._markCrossPoints[k],mark:this._label[k]};
 					if(this.isTriangle(p1.p,p2.p,p3.p)){
 						let triangel="△"+p1.mark+p2.mark+p3.mark;
-						this._triangles.push(triangel);
+						this._triangleNames.push(triangel);
+						this._triangles.push([p1.p,p2.p,p3.p]);
 						triangleNum++;
 					}
 				}
 			}
 		}
 		console.log("三角形个数"+triangleNum);
-	}
-
-	/*得到所有三角形*/
-	public get triangles(){
-		return this._triangles;
 	}
 
 	/*判断三个点是否是三角形*/

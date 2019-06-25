@@ -3,12 +3,13 @@ class TriangleList extends eui.Group{
 	private _width:number;
 	private _height:number;
 	private _list:eui.List;
+	private _canvas:Canvas;
 
-
-	public constructor(width:number,height:number) {
+	public constructor(width:number,height:number,canvas:Canvas) {
 		super();
 		this._width=width;
 		this._height=height;
+		this._canvas=canvas;
 		this.createBackground();
 		this.createHeader();
 		this.createList();
@@ -49,8 +50,8 @@ class TriangleList extends eui.Group{
 
 		this._list=new eui.List();
 		this._list.width=this._width;
-		
-		
+		this._list.addEventListener(eui.ItemTapEvent.ITEM_TAP,this.onChange,this);
+			
 		let scroller=new eui.Scroller();
 		scroller.width=this._width-20;
 		scroller.height=this._height-70;
@@ -58,5 +59,10 @@ class TriangleList extends eui.Group{
 		scroller.y=50;
 		scroller.viewport=this._list;
 		this.addChild(scroller);
+	}
+
+	private onChange(e:eui.PropertyEvent){
+		console.log(this._list.selectedItem,this._list.selectedIndex);
+		this._canvas.showTriangleByIndex(this._list.selectedIndex);
 	}
 }
