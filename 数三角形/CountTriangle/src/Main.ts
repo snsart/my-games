@@ -106,11 +106,6 @@ class Main extends eui.UILayer {
         canvas.y=50;
         this.addChild(canvas);
 
-        let buttonPanel=new ControlPanel(this.stage.stageWidth*0.8-20,60,canvas);
-        buttonPanel.x=10;
-        buttonPanel.y=this.stage.stageHeight-80;
-        this.addChild(buttonPanel);
-
         let listWidth=this.stage.stageWidth*0.2-10;
         let listHeight=this.stage.stageHeight-60;
         let triangleList=new TriangleList(listWidth,listHeight);
@@ -118,10 +113,10 @@ class Main extends eui.UILayer {
         triangleList.y=50;
         this.addChild(triangleList);
 
-        let mark=new Mark("A");
-        mark.x=200;
-        mark.y=200
-        this.addChild(mark);
+        let buttonPanel=new ControlPanel(this.stage.stageWidth*0.8-20,60,canvas,triangleList);
+        buttonPanel.x=10;
+        buttonPanel.y=this.stage.stageHeight-80;
+        this.addChild(buttonPanel);
         
     }
     /**

@@ -6,14 +6,18 @@ class Canvas extends egret.Sprite {
 	private _startPoint:egret.Point;
 	private _bg:egret.Shape=new egret.Shape();
 
-	private _lines=[];//线条，包括起点和终点
-	private _linesWithCross=[];//线条，包括中间的交点
+	private _lines=[];//线条数据，起点和终点
+	private _linesWithCross=[];//线条数据，包括中间的交点
 
 	private _currentLine:egret.Shape;
-	private _lineShapes:egret.Shape[]=[];//所有的线段
+	private _lineShapes:egret.Shape[]=[];//所有的线段图形
 
 	private _points:egret.Point[]=[];//所有的点，包括端点
 	private _markCrossPoints:egret.Point[]=[];//所有的交点
+
+	private _label=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U"];
+
+	private _triangles=[];
 
 	public constructor(width:number,height:number) {
 		super();
@@ -64,17 +68,64 @@ class Canvas extends egret.Sprite {
 	public markCross(){
 		this.setMartCrossPoints();
 		let crossLines=this.getLinesWithCross(this._lines);
-		let table=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U"];
+		
 		for(let i=0;i<this._markCrossPoints.length;i++){
-			let mark=new Mark(table[i]);
+			let mark=new Mark(this._label[i]);
 			mark.x=this._markCrossPoints[i].x;
 			mark.y=this._markCrossPoints[i].y;
 			this.addChild(mark);
 		}
 	}
 
+	/*显示答案*/
+	public showAnswer(){
+		let len=this._markCrossPoints.length;
+		let triangleNum:number=0;
+		for(let i=0;i<len-2;i++){
+			for(let j=i+1;j<len-1;j++){
+				for(let k=j+1;k<len;k++){
+					let p1={p:this._markCrossPoints[i],mark:this._label[i]};
+					let p2={p:this._markCrossPoints[j],mark:this._label[j]};
+					let p3={p:this._markCrossPoints[k],mark:this._label[k]};
+					if(this.isTriangle(p1.p,p2.p,p3.p)){
+						let triangel="△"+p1.mark+p2.mark+p3.mark;
+						this._triangles.push(triangel);
+						triangleNum++;
+					}
+				}
+			}
+		}
+		console.log("三角形个数"+triangleNum);
+	}
+
+	/*得到所有三角形*/
+	public get triangles(){
+		return this._triangles;
+	}
+
+	/*判断三个点是否是三角形*/
+	private isTriangle(p1:egret.Point,p2:egret.Point,p3:egret.Point){
+		let line12=false,line13=false,line23=false;
+		for(let i=0;i<this._linesWithCross.length;i++){
+			let line=this._linesWithCross[i];
+			if(line.indexOf(p1)!=-1&&line.indexOf(p2)!=-1){
+				line12=true;
+				continue;
+			}
+			if(line.indexOf(p1)!=-1&&line.indexOf(p3)!=-1){
+				line13=true;
+				continue;
+			}
+			if(line.indexOf(p2)!=-1&&line.indexOf(p3)!=-1){
+				line23=true;
+				continue;
+			}
+		}
+		return line12&&line13&&line23;
+	}
+
 	/*取得所有的交点*/
-	public setMartCrossPoints(){
+	private setMartCrossPoints(){
 		this._markCrossPoints=this._points.concat();
 		for(let i=this._markCrossPoints.length;i>=0;i--){
 			let point=this._markCrossPoints[i];

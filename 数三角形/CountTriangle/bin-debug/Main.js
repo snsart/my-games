@@ -171,20 +171,16 @@ var Main = (function (_super) {
         var canvas = new Canvas(canvasWidth, canvasHeight);
         canvas.y = 50;
         this.addChild(canvas);
-        var buttonPanel = new ControlPanel(this.stage.stageWidth * 0.8 - 20, 60, canvas);
-        buttonPanel.x = 10;
-        buttonPanel.y = this.stage.stageHeight - 80;
-        this.addChild(buttonPanel);
         var listWidth = this.stage.stageWidth * 0.2 - 10;
         var listHeight = this.stage.stageHeight - 60;
         var triangleList = new TriangleList(listWidth, listHeight);
         triangleList.x = this.stage.stageWidth - listWidth;
         triangleList.y = 50;
         this.addChild(triangleList);
-        var mark = new Mark("A");
-        mark.x = 200;
-        mark.y = 200;
-        this.addChild(mark);
+        var buttonPanel = new ControlPanel(this.stage.stageWidth * 0.8 - 20, 60, canvas, triangleList);
+        buttonPanel.x = 10;
+        buttonPanel.y = this.stage.stageHeight - 80;
+        this.addChild(buttonPanel);
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。

@@ -19,6 +19,13 @@ var TriangleList = (function (_super) {
         _this.createList();
         return _this;
     }
+    Object.defineProperty(TriangleList.prototype, "list", {
+        set: function (datas) {
+            this._list.dataProvider = new eui.ArrayCollection(datas);
+        },
+        enumerable: true,
+        configurable: true
+    });
     TriangleList.prototype.createBackground = function () {
         var bg = new egret.Shape();
         var g = bg.graphics;
@@ -45,15 +52,14 @@ var TriangleList = (function (_super) {
         g.lineStyle(1, 0xcccccc);
         g.drawRect(10, 50, this._width - 20, this._height - 70);
         this.addChild(bg);
-        var list = new eui.List();
-        list.width = this._width;
-        list.dataProvider = new eui.ArrayCollection(["item1", "item2", "item3", "item4", "item5", "item6", "item7", "item8"]);
+        this._list = new eui.List();
+        this._list.width = this._width;
         var scroller = new eui.Scroller();
         scroller.width = this._width - 20;
         scroller.height = this._height - 70;
         scroller.x = 10;
         scroller.y = 50;
-        scroller.viewport = list;
+        scroller.viewport = this._list;
         this.addChild(scroller);
     };
     return TriangleList;

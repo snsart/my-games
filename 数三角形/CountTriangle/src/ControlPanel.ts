@@ -4,12 +4,14 @@ class ControlPanel extends egret.Sprite {
 	private _height:number;
 	private _levelInfo:egret.TextField;
 	private _canvas:Canvas;
+	private _triangleList:TriangleList;
 
-	public constructor(width:number,height:number,canvas:Canvas) {
+	public constructor(width:number,height:number,canvas:Canvas,list:TriangleList) {
 		super();
 		this._width=width;
 		this._height=height;
 		this._canvas=canvas;
+		this._triangleList=list;
 		this.createBackGround();
 		this.addBtns();
 	}
@@ -66,6 +68,10 @@ class ControlPanel extends egret.Sprite {
 		answerBtn.x=340;
 		answerBtn.y=5;
 		this.addChild(answerBtn);
+		answerBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,function(e){
+			this._canvas.showAnswer();
+			this._triangleList.list=this._canvas.triangles;
+		},this)
 
 		let updateBtn:eui.Button=new eui.Button();
 		updateBtn.label="刷 新";

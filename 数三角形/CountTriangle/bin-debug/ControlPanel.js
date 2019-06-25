@@ -10,11 +10,12 @@ r.prototype = e.prototype, t.prototype = new r();
 };
 var ControlPanel = (function (_super) {
     __extends(ControlPanel, _super);
-    function ControlPanel(width, height, canvas) {
+    function ControlPanel(width, height, canvas, list) {
         var _this = _super.call(this) || this;
         _this._width = width;
         _this._height = height;
         _this._canvas = canvas;
+        _this._triangleList = list;
         _this.createBackGround();
         _this.addBtns();
         return _this;
@@ -63,6 +64,10 @@ var ControlPanel = (function (_super) {
         answerBtn.x = 340;
         answerBtn.y = 5;
         this.addChild(answerBtn);
+        answerBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
+            this._canvas.showAnswer();
+            this._triangleList.list = this._canvas.triangles;
+        }, this);
         var updateBtn = new eui.Button();
         updateBtn.label = "刷 新";
         updateBtn.width = 100;

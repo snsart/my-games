@@ -2,6 +2,7 @@ class TriangleList extends eui.Group{
 
 	private _width:number;
 	private _height:number;
+	private _list:eui.List;
 
 
 	public constructor(width:number,height:number) {
@@ -11,6 +12,10 @@ class TriangleList extends eui.Group{
 		this.createBackground();
 		this.createHeader();
 		this.createList();
+	}
+
+	public set list(datas){
+		this._list.dataProvider = new eui.ArrayCollection(datas);
 	}
 
 	private createBackground(){
@@ -42,16 +47,16 @@ class TriangleList extends eui.Group{
 		g.drawRect(10,50,this._width-20,this._height-70);
 		this.addChild(bg);
 
-		let list=new eui.List();
-		list.width=this._width;
-		list.dataProvider = new eui.ArrayCollection(["item1","item2","item3","item4","item5","item6","item7","item8"]);
+		this._list=new eui.List();
+		this._list.width=this._width;
+		
 		
 		let scroller=new eui.Scroller();
 		scroller.width=this._width-20;
 		scroller.height=this._height-70;
 		scroller.x=10;
 		scroller.y=50;
-		scroller.viewport=list;
+		scroller.viewport=this._list;
 		this.addChild(scroller);
 	}
 }
