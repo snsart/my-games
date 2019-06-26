@@ -10,10 +10,11 @@ r.prototype = e.prototype, t.prototype = new r();
 };
 var TriangleList = (function (_super) {
     __extends(TriangleList, _super);
-    function TriangleList(width, height) {
+    function TriangleList(width, height, canvas) {
         var _this = _super.call(this) || this;
         _this._width = width;
         _this._height = height;
+        _this._canvas = canvas;
         _this.createBackground();
         _this.createHeader();
         _this.createList();
@@ -54,6 +55,7 @@ var TriangleList = (function (_super) {
         this.addChild(bg);
         this._list = new eui.List();
         this._list.width = this._width;
+        this._list.addEventListener(eui.ItemTapEvent.ITEM_TAP, this.onChange, this);
         var scroller = new eui.Scroller();
         scroller.width = this._width - 20;
         scroller.height = this._height - 70;
@@ -61,6 +63,10 @@ var TriangleList = (function (_super) {
         scroller.y = 50;
         scroller.viewport = this._list;
         this.addChild(scroller);
+    };
+    TriangleList.prototype.onChange = function (e) {
+        console.log(this._list.selectedItem, this._list.selectedIndex);
+        this._canvas.showTriangleByIndex(this._list.selectedIndex);
     };
     return TriangleList;
 }(eui.Group));

@@ -173,7 +173,7 @@ var Main = (function (_super) {
         this.addChild(canvas);
         var listWidth = this.stage.stageWidth * 0.2 - 10;
         var listHeight = this.stage.stageHeight - 60;
-        var triangleList = new TriangleList(listWidth, listHeight);
+        var triangleList = new TriangleList(listWidth, listHeight, canvas);
         triangleList.x = this.stage.stageWidth - listWidth;
         triangleList.y = 50;
         this.addChild(triangleList);

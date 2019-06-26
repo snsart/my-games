@@ -20,13 +20,17 @@ var Canvas = (function (_super) {
         _this._points = []; //所有的点，包括端点
         _this._markCrossPoints = []; //所有的交点
         _this._label = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U"];
-        _this._triangles = [];
+        _this._triangleNames = []; //三角形名称，用来渲染列表;
+        _this._triangles = []; //三角形集合，存储三角形顶点；
+        _this._showTriangleShape = new egret.Shape();
         _this._width = width;
         _this._height = height;
         _this._startPoint;
         _this.touchEnabled = true;
         _this.createBackGround();
         _this.addChild(_this._bg);
+        _this.addChild(_this._showTriangleShape);
+        _this._showTriangleShape.alpha = 0.5;
         _this.addEvents();
         return _this;
     }
@@ -73,8 +77,28 @@ var Canvas = (function (_super) {
             this.addChild(mark);
         }
     };
-    /*显示答案*/
-    Canvas.prototype.showAnswer = function () {
+    Object.defineProperty(Canvas.prototype, "triangles", {
+        /*得到所有三角形*/
+        get: function () {
+            this.fillTrianglesList();
+            return this._triangleNames;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /*显示指定三角形*/
+    Canvas.prototype.showTriangleByIndex = function (index) {
+        var triangle = this._triangles[index];
+        var g = this._showTriangleShape.graphics;
+        g.clear();
+        g.beginFill(0x00ff00);
+        g.moveTo(triangle[0].x, triangle[0].y);
+        g.lineTo(triangle[1].x, triangle[1].y);
+        g.lineTo(triangle[2].x, triangle[2].y);
+        g.endFill();
+    };
+    /*获取所有三角形并填充三角形容器列表*/
+    Canvas.prototype.fillTrianglesList = function () {
         var len = this._markCrossPoints.length;
         var triangleNum = 0;
         for (var i = 0; i < len - 2; i++) {
@@ -85,7 +109,8 @@ var Canvas = (function (_super) {
                     var p3 = { p: this._markCrossPoints[k], mark: this._label[k] };
                     if (this.isTriangle(p1.p, p2.p, p3.p)) {
                         var triangel = "△" + p1.mark + p2.mark + p3.mark;
-                        this._triangles.push(triangel);
+                        this._triangleNames.push(triangel);
+                        this._triangles.push([p1.p, p2.p, p3.p]);
                         triangleNum++;
                     }
                 }
@@ -93,14 +118,6 @@ var Canvas = (function (_super) {
         }
         console.log("三角形个数" + triangleNum);
     };
-    Object.defineProperty(Canvas.prototype, "triangles", {
-        /*得到所有三角形*/
-        get: function () {
-            return this._triangles;
-        },
-        enumerable: true,
-        configurable: true
-    });
     /*判断三个点是否是三角形*/
     Canvas.prototype.isTriangle = function (p1, p2, p3) {
         var line12 = false, line13 = false, line23 = false;

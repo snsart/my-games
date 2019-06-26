@@ -65,7 +65,6 @@ var ControlPanel = (function (_super) {
         answerBtn.y = 5;
         this.addChild(answerBtn);
         answerBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
-            this._canvas.showAnswer();
             this._triangleList.list = this._canvas.triangles;
         }, this);
         var updateBtn = new eui.Button();
