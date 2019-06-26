@@ -166,6 +166,15 @@ var Main = (function (_super) {
      * Create scene interface
      */
     Main.prototype.createGameScene = function () {
+        var title = new eui.Label();
+        title.x = 0;
+        title.y = 10;
+        title.size = 25;
+        title.bold = true;
+        title.fontFamily = "微软雅黑";
+        title.text = ">>数一数有几个三角形";
+        title.textColor = 0x666666;
+        this.addChild(title);
         var canvasWidth = this.stage.stageWidth * 0.8;
         var canvasHeight = this.stage.stageHeight - 60;
         var canvas = new Canvas(canvasWidth, canvasHeight);

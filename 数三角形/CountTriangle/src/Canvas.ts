@@ -14,12 +14,17 @@ class Canvas extends egret.Sprite {
 
 	private _points:egret.Point[]=[];//所有的点，包括端点
 	private _markCrossPoints:egret.Point[]=[];//所有的交点
+	private _marks=[];//所有的标记点
 
 	private _label=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U"];
 
 	private _triangleNames=[];//三角形名称，用来渲染列表;
 	private _triangles=[];//三角形集合，存储三角形顶点；
 	private _showTriangleShape:egret.Shape=new egret.Shape();
+
+	private _trianglesNumLabel:eui.Label;
+
+	private _redrawLine:egret.Shape=new egret.Shape();
 
 	public constructor(width:number,height:number) {
 		super();
@@ -29,9 +34,19 @@ class Canvas extends egret.Sprite {
 		this.touchEnabled=true;
 		this.createBackGround();
 		this.addChild(this._bg);
+		this.addChild(this._redrawLine);
 		this.addChild(this._showTriangleShape);
 		this._showTriangleShape.alpha=0.5;
 		this.addEvents();
+
+		this._trianglesNumLabel=new eui.Label("共5个三角形");
+		this._trianglesNumLabel.textColor=0xff0000;
+		this._trianglesNumLabel.size=30;
+		this._trianglesNumLabel.fontFamily="微软雅黑";
+		this._trianglesNumLabel.x=10;
+		this._trianglesNumLabel.y=10;
+		this.addChild(this._trianglesNumLabel);
+		this._trianglesNumLabel.visible=false;
 	}
 
 	public set drawAble(value:boolean){
@@ -55,16 +70,17 @@ class Canvas extends egret.Sprite {
 		this.sortLines(this._linesWithCross);
 		this.trimLines(this._linesWithCross);
 	
-		this._currentLine=new egret.Shape();
-		let g=this._currentLine.graphics;
+		let g=this._redrawLine.graphics;
+		g.clear();
 		g.lineStyle(3,0x000000);
 
 		for(let i=0;i<this._linesWithCross.length;i++){
 			let start=this._linesWithCross[i][0],end=this._linesWithCross[i][this._linesWithCross[i].length-1];
-			g.moveTo(start.x,start.y);
-			g.lineTo(end.x,end.y);
+			if(start&&end){
+				g.moveTo(start.x,start.y);
+				g.lineTo(end.x,end.y);
+			}
 		}
-		this.addChild(this._currentLine);
 
 	}
 
@@ -77,15 +93,19 @@ class Canvas extends egret.Sprite {
 			let mark=new Mark(this._label[i]);
 			mark.x=this._markCrossPoints[i].x;
 			mark.y=this._markCrossPoints[i].y;
+			this._marks.push(mark);
 			this.addChild(mark);
 		}
 	}
 
-	
-
 	/*得到所有三角形*/
 	public get triangles(){
+		this._triangleNames=[];
+		this._triangles=[];
 		this.fillTrianglesList();
+		let num=this._triangleNames.length;
+		this._trianglesNumLabel.text="共"+num+"个三角形";
+		this._trianglesNumLabel.visible=true;
 		return this._triangleNames;
 	}
 
@@ -99,6 +119,38 @@ class Canvas extends egret.Sprite {
 		g.lineTo(triangle[1].x,triangle[1].y);
 		g.lineTo(triangle[2].x,triangle[2].y);
 		g.endFill();
+	}
+
+	/*刷新*/
+	public update(){
+		for(let i=0;i<this._lineShapes.length;i++){
+			this.removeChild(this._lineShapes[i]);
+		}
+		this._lineShapes=[];
+		
+		let g=this._redrawLine.graphics;
+		g.clear();
+	
+
+		this._lines=[];
+		this._linesWithCross=[];
+
+		this._points=[];
+		this._markCrossPoints=[];
+
+		this._triangleNames=[];
+		this._triangles=[];
+
+		this._trianglesNumLabel.visible=false;
+
+		for(let i=0;i<this._marks.length;i++){
+			this.removeChild(this._marks[i]);
+		}
+		this._marks=[];
+
+		let g2=this._showTriangleShape.graphics;
+		g2.clear();
+
 	}
 
 	/*获取所有三角形并填充三角形容器列表*/
@@ -242,7 +294,7 @@ class Canvas extends egret.Sprite {
 	private getPointsNearBy(point:egret.Point,points:egret.Point[]){
 		return points.filter(function(value,index,array){
 			let distance=(value.x-point.x)*(value.x-point.x)+(value.y-point.y)*(value.y-point.y);
-			if(distance<400){
+			if(distance<225){
 				return true;
 			}
 		});
@@ -278,14 +330,10 @@ class Canvas extends egret.Sprite {
 				}
 			}
 			if(!startIsCross){
-				console.log("trimstart");
 				lines[i].splice(0,1);
 			}
 			if(!endIsCross){
-				console.log("trimend");
-				console.log(lines[i].length);
 				lines[i].splice(lines[i].length-1,1);
-				console.log(lines[i].length);
 			}
 		}
 	}

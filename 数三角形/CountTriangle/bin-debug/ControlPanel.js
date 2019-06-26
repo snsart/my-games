@@ -36,8 +36,12 @@ var ControlPanel = (function (_super) {
         drawBtn.height = 50;
         drawBtn.x = 10;
         drawBtn.y = 5;
+        drawBtn.selected = true;
         this.addChild(drawBtn);
-        var reDrawBtn = new eui.ToggleButton();
+        drawBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
+            this._canvas.drawAble = drawBtn.selected;
+        }, this);
+        var reDrawBtn = new eui.Button();
         reDrawBtn.label = "修 正";
         reDrawBtn.width = 100;
         reDrawBtn.height = 50;
@@ -45,9 +49,11 @@ var ControlPanel = (function (_super) {
         reDrawBtn.y = 5;
         this.addChild(reDrawBtn);
         reDrawBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
+            drawBtn.selected = false;
+            this._canvas.drawAble = drawBtn.selected;
             this._canvas.reDraw();
         }, this);
-        var markBtn = new eui.ToggleButton();
+        var markBtn = new eui.Button();
         markBtn.label = "标 记";
         markBtn.width = 100;
         markBtn.height = 50;
@@ -55,9 +61,11 @@ var ControlPanel = (function (_super) {
         markBtn.y = 5;
         this.addChild(markBtn);
         markBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
+            drawBtn.selected = false;
+            this._canvas.drawAble = drawBtn.selected;
             this._canvas.markCross();
         }, this);
-        var answerBtn = new eui.ToggleButton();
+        var answerBtn = new eui.Button();
         answerBtn.label = "答 案";
         answerBtn.width = 100;
         answerBtn.height = 50;
@@ -65,6 +73,9 @@ var ControlPanel = (function (_super) {
         answerBtn.y = 5;
         this.addChild(answerBtn);
         answerBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
+            drawBtn.selected = false;
+            this._canvas.drawAble = drawBtn.selected;
+            this._triangleList.list = [];
             this._triangleList.list = this._canvas.triangles;
         }, this);
         var updateBtn = new eui.Button();
@@ -74,6 +85,12 @@ var ControlPanel = (function (_super) {
         updateBtn.x = this._width - 110;
         updateBtn.y = 5;
         this.addChild(updateBtn);
+        updateBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
+            drawBtn.selected = true;
+            this._canvas.drawAble = drawBtn.selected;
+            this._triangleList.list = [];
+            this._canvas.update();
+        }, this);
         /*
                 prebutton=new Button("绘图");
                 prebutton.x=10;

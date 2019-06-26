@@ -19,19 +19,30 @@ var Canvas = (function (_super) {
         _this._lineShapes = []; //所有的线段图形
         _this._points = []; //所有的点，包括端点
         _this._markCrossPoints = []; //所有的交点
+        _this._marks = []; //所有的标记点
         _this._label = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U"];
         _this._triangleNames = []; //三角形名称，用来渲染列表;
         _this._triangles = []; //三角形集合，存储三角形顶点；
         _this._showTriangleShape = new egret.Shape();
+        _this._redrawLine = new egret.Shape();
         _this._width = width;
         _this._height = height;
         _this._startPoint;
         _this.touchEnabled = true;
         _this.createBackGround();
         _this.addChild(_this._bg);
+        _this.addChild(_this._redrawLine);
         _this.addChild(_this._showTriangleShape);
         _this._showTriangleShape.alpha = 0.5;
         _this.addEvents();
+        _this._trianglesNumLabel = new eui.Label("共5个三角形");
+        _this._trianglesNumLabel.textColor = 0xff0000;
+        _this._trianglesNumLabel.size = 30;
+        _this._trianglesNumLabel.fontFamily = "微软雅黑";
+        _this._trianglesNumLabel.x = 10;
+        _this._trianglesNumLabel.y = 10;
+        _this.addChild(_this._trianglesNumLabel);
+        _this._trianglesNumLabel.visible = false;
         return _this;
     }
     Object.defineProperty(Canvas.prototype, "drawAble", {
@@ -56,15 +67,16 @@ var Canvas = (function (_super) {
         this._linesWithCross = this.getLinesWithCross(this._lines);
         this.sortLines(this._linesWithCross);
         this.trimLines(this._linesWithCross);
-        this._currentLine = new egret.Shape();
-        var g = this._currentLine.graphics;
+        var g = this._redrawLine.graphics;
+        g.clear();
         g.lineStyle(3, 0x000000);
         for (var i = 0; i < this._linesWithCross.length; i++) {
             var start = this._linesWithCross[i][0], end = this._linesWithCross[i][this._linesWithCross[i].length - 1];
-            g.moveTo(start.x, start.y);
-            g.lineTo(end.x, end.y);
+            if (start && end) {
+                g.moveTo(start.x, start.y);
+                g.lineTo(end.x, end.y);
+            }
         }
-        this.addChild(this._currentLine);
     };
     /*标记交点*/
     Canvas.prototype.markCross = function () {
@@ -74,13 +86,19 @@ var Canvas = (function (_super) {
             var mark = new Mark(this._label[i]);
             mark.x = this._markCrossPoints[i].x;
             mark.y = this._markCrossPoints[i].y;
+            this._marks.push(mark);
             this.addChild(mark);
         }
     };
     Object.defineProperty(Canvas.prototype, "triangles", {
         /*得到所有三角形*/
         get: function () {
+            this._triangleNames = [];
+            this._triangles = [];
             this.fillTrianglesList();
+            var num = this._triangleNames.length;
+            this._trianglesNumLabel.text = "共" + num + "个三角形";
+            this._trianglesNumLabel.visible = true;
             return this._triangleNames;
         },
         enumerable: true,
@@ -96,6 +114,28 @@ var Canvas = (function (_super) {
         g.lineTo(triangle[1].x, triangle[1].y);
         g.lineTo(triangle[2].x, triangle[2].y);
         g.endFill();
+    };
+    /*刷新*/
+    Canvas.prototype.update = function () {
+        for (var i = 0; i < this._lineShapes.length; i++) {
+            this.removeChild(this._lineShapes[i]);
+        }
+        this._lineShapes = [];
+        var g = this._redrawLine.graphics;
+        g.clear();
+        this._lines = [];
+        this._linesWithCross = [];
+        this._points = [];
+        this._markCrossPoints = [];
+        this._triangleNames = [];
+        this._triangles = [];
+        this._trianglesNumLabel.visible = false;
+        for (var i = 0; i < this._marks.length; i++) {
+            this.removeChild(this._marks[i]);
+        }
+        this._marks = [];
+        var g2 = this._showTriangleShape.graphics;
+        g2.clear();
     };
     /*获取所有三角形并填充三角形容器列表*/
     Canvas.prototype.fillTrianglesList = function () {
@@ -225,7 +265,7 @@ var Canvas = (function (_super) {
     Canvas.prototype.getPointsNearBy = function (point, points) {
         return points.filter(function (value, index, array) {
             var distance = (value.x - point.x) * (value.x - point.x) + (value.y - point.y) * (value.y - point.y);
-            if (distance < 400) {
+            if (distance < 225) {
                 return true;
             }
         });
@@ -263,14 +303,10 @@ var Canvas = (function (_super) {
                 }
             }
             if (!startIsCross) {
-                console.log("trimstart");
                 lines[i].splice(0, 1);
             }
             if (!endIsCross) {
-                console.log("trimend");
-                console.log(lines[i].length);
                 lines[i].splice(lines[i].length - 1, 1);
-                console.log(lines[i].length);
             }
         }
     };

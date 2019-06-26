@@ -100,6 +100,16 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected createGameScene(): void {
+        let title:eui.Label=new eui.Label();
+        title.x=0;
+        title.y=10;
+        title.size=25;
+        title.bold=true;
+        title.fontFamily="微软雅黑";
+        title.text=">>数一数有几个三角形";
+        title.textColor=0x666666;
+        this.addChild(title);
+
         let canvasWidth=this.stage.stageWidth*0.8;
         let canvasHeight=this.stage.stageHeight-60;
         let canvas:Canvas=new Canvas(canvasWidth,canvasHeight);
