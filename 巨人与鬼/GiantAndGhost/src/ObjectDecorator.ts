@@ -135,8 +135,6 @@ class ObjectDecorator extends egret.DisplayObject {
 
 
 	private static stageTouchMoveHandler(e:egret.TouchEvent):void{
-
-
 		if(ObjectDecorator.currentObj==null){
 			return;
 		}
