@@ -166,25 +166,25 @@ var Main = (function (_super) {
      * Create scene interface
      */
     Main.prototype.createGameScene = function () {
-        var title = new eui.Label();
-        title.x = 0;
-        title.y = 10;
-        title.size = 25;
-        title.bold = true;
-        title.fontFamily = "微软雅黑";
-        title.text = ">>数一数有几个三角形";
-        title.textColor = 0x666666;
-        this.addChild(title);
+        /* let title:eui.Label=new eui.Label();
+         title.size=25;
+         title.bold=true;
+         title.fontFamily="微软雅黑";
+         title.text="数一数有几个三角形";
+         title.textColor=0x666666;
+         title.x=this.stage.stageWidth/2-title.width/2;
+         title.y=5;
+         this.addChild(title);*/
         var canvasWidth = this.stage.stageWidth * 0.8;
-        var canvasHeight = this.stage.stageHeight - 60;
+        var canvasHeight = this.stage.stageHeight - 20;
         var canvas = new Canvas(canvasWidth, canvasHeight);
-        canvas.y = 50;
+        canvas.y = 10;
         this.addChild(canvas);
         var listWidth = this.stage.stageWidth * 0.2 - 10;
-        var listHeight = this.stage.stageHeight - 60;
+        var listHeight = this.stage.stageHeight - 20;
         var triangleList = new TriangleList(listWidth, listHeight, canvas);
         triangleList.x = this.stage.stageWidth - listWidth;
-        triangleList.y = 50;
+        triangleList.y = 10;
         this.addChild(triangleList);
         var buttonPanel = new ControlPanel(this.stage.stageWidth * 0.8 - 20, 60, canvas, triangleList);
         buttonPanel.x = 10;

@@ -100,27 +100,30 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected createGameScene(): void {
-        let title:eui.Label=new eui.Label();
-        title.x=0;
-        title.y=10;
+
+        
+
+       /* let title:eui.Label=new eui.Label();
         title.size=25;
         title.bold=true;
         title.fontFamily="微软雅黑";
-        title.text=">>数一数有几个三角形";
+        title.text="数一数有几个三角形";
         title.textColor=0x666666;
-        this.addChild(title);
+        title.x=this.stage.stageWidth/2-title.width/2;
+        title.y=5;
+        this.addChild(title);*/
 
         let canvasWidth=this.stage.stageWidth*0.8;
-        let canvasHeight=this.stage.stageHeight-60;
+        let canvasHeight=this.stage.stageHeight-20;
         let canvas:Canvas=new Canvas(canvasWidth,canvasHeight);
-        canvas.y=50;
+        canvas.y=10;
         this.addChild(canvas);
 
         let listWidth=this.stage.stageWidth*0.2-10;
-        let listHeight=this.stage.stageHeight-60;
+        let listHeight=this.stage.stageHeight-20;
         let triangleList=new TriangleList(listWidth,listHeight,canvas);
         triangleList.x=this.stage.stageWidth-listWidth;
-        triangleList.y=50;
+        triangleList.y=10;
         this.addChild(triangleList);
 
         let buttonPanel=new ControlPanel(this.stage.stageWidth*0.8-20,60,canvas,triangleList);
