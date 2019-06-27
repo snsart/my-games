@@ -25,10 +25,10 @@
       "name": "assetsmanager"
     },
     {
-      "name": "game"
+      "name": "tween"
     },
     {
-      "name": "tween"
+      "name": "game"
     },
     {
       "name": "promise"

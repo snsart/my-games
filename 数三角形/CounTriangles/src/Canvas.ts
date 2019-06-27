@@ -67,8 +67,12 @@ class Canvas extends egret.Sprite {
 		this._lineShapes=[];
 
 		this._linesWithCross=this.getLinesWithCross(this._lines);
+
+		//console.log(this._linesWithCross);
 		this.sortLines(this._linesWithCross);
+		//console.log(this._linesWithCross);
 		this.trimLines(this._linesWithCross);
+		//console.log(this._linesWithCross);
 	
 		let g=this._redrawLine.graphics;
 		g.clear();
@@ -305,10 +309,14 @@ class Canvas extends egret.Sprite {
 		for(let i=0;i<lines.length;i++){
 			let startPoint=lines[i][0];
 			lines[i].sort(function(value1,value2){
-				let dis1=this.getDistance(value1,startPoint);
-				let dis2=this.getDistance(value2,startPoint);
-				return dis1>dis2;
-			}.bind(this));
+				let dis1= (value1.x-startPoint.x)*(value1.x-startPoint.x)+(value1.y-startPoint.y)*(value1.y-startPoint.y);
+				let dis2= (value2.x-startPoint.x)*(value2.x-startPoint.x)+(value2.y-startPoint.y)*(value2.y-startPoint.y);
+				if(dis1>dis2){
+					return -1
+				}
+				return 1;
+			});
+			console.log(lines[i]);
 		}
 	}
 

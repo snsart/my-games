@@ -65,8 +65,11 @@ var Canvas = (function (_super) {
         }
         this._lineShapes = [];
         this._linesWithCross = this.getLinesWithCross(this._lines);
+        //console.log(this._linesWithCross);
         this.sortLines(this._linesWithCross);
+        //console.log(this._linesWithCross);
         this.trimLines(this._linesWithCross);
+        //console.log(this._linesWithCross);
         var g = this._redrawLine.graphics;
         g.clear();
         g.lineStyle(3, 0x000000);
@@ -275,12 +278,15 @@ var Canvas = (function (_super) {
         var _loop_1 = function (i) {
             var startPoint = lines[i][0];
             lines[i].sort(function (value1, value2) {
-                var dis1 = this.getDistance(value1, startPoint);
-                var dis2 = this.getDistance(value2, startPoint);
-                return dis1 > dis2;
-            }.bind(this_1));
+                var dis1 = (value1.x - startPoint.x) * (value1.x - startPoint.x) + (value1.y - startPoint.y) * (value1.y - startPoint.y);
+                var dis2 = (value2.x - startPoint.x) * (value2.x - startPoint.x) + (value2.y - startPoint.y) * (value2.y - startPoint.y);
+                if (dis1 > dis2) {
+                    return -1;
+                }
+                return 1;
+            });
+            console.log(lines[i]);
         };
-        var this_1 = this;
         for (var i = 0; i < lines.length; i++) {
             _loop_1(i);
         }

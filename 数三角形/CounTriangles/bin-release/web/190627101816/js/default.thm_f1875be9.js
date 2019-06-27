@@ -50,7 +50,6 @@ window.skins={};
 		var t = new eui.Label();
 		this.labelDisplay = t;
 		t.bottom = 8;
-		t.fontFamily = "微软雅黑";
 		t.left = 8;
 		t.right = 8;
 		t.size = 20;

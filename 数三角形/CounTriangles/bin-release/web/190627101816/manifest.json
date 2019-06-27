@@ -4,12 +4,12 @@
 		"js/egret.web.min_3e311c0e.js",
 		"js/eui.min_22447123.js",
 		"js/assetsmanager.min_49f5417f.js",
-		"js/game.min_45aa06f6.js",
 		"js/tween.min_6c5a88f9.js",
+		"js/game.min_45aa06f6.js",
 		"js/promise.min_83a6a5d.js"
 	],
 	"game": [
-		"js/default.thm_56a4c0f.js",
-		"js/main.min_198603c2.js"
+		"js/default.thm_f1875be9.js",
+		"js/main.min_4b400bb8.js"
 	]
 }
