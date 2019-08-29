@@ -1,0 +1,39 @@
+html{
+	font-size: 10px;
+}
+body{
+	text-align: center;
+	font-size: 0;
+	background-color: #000000;
+	margin: 0;
+	padding: 0;
+}
+.head{
+	width: 96rem;
+	height: 6rem;
+	font-size: 1.5rem;
+	color: #fff;
+	padding-top: 2.5rem;
+	background-color: #fff;
+}
+.head .h-cont{
+	display: inline-block;
+	border-radius: 2rem;
+	line-height: 0;
+	padding: 0.2rem 1.5rem;
+	background-color: #666;
+}
+.content{
+	font-size: 0;
+	margin: 0 auto;
+	width: 96rem;
+	height: 100rem;
+	background-color: #ccc;
+}
+canvas{
+	background-color: #fff;
+	width: 96rem;
+	height: 54rem;
+	border-bottom: solid thin #666;
+	border-top: solid thin #666 ;
+}
